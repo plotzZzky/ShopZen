@@ -1,0 +1,122 @@
+.navbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  width: 100%;
+  z-index: 999;
+  backdrop-filter: blur(4px);
+}
+
+.navbar-align {
+  width: calc(100% - 1vw);
+  display: flex;
+  margin: auto;
+  justify-content: flex-end;
+}
+
+.menu {
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  gap: 0 1vw;
+}
+
+.menu-item {
+  width: var(--menu_size);
+  padding: 1.2vh 1vw 0.5vh;
+  color: var(--fontColor_sec);
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.menu-item * {
+  color: var(--fontColor_sec);
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.menu-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.2vh 1vw 0.5vh;
+  transform-origin: center;
+  transform: scaleX(0);
+  transition: transform .2s ease-in-out;
+  border-bottom: 3px solid var(--color_accent);
+  border-radius: 2px;
+  z-index: -1;
+}
+
+.menu-item:hover::before {
+  transform-origin: center;
+  transform: scaleX(1);
+}
+
+.menu-item:hover,
+.menu-item:hover * {
+  transition: 250ms;
+  color: var(--color_accent);
+}
+
+.menu-icon {
+  display: none;
+  width: 40px;
+  height: 28px;
+  margin: 0;
+  border-radius: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-icon * {
+  color: black;
+}
+
+.menu-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  transform: scaleX(0);
+  transition: transform .2s ease-in-out;
+  border-bottom: 3px solid var(--color_accent);
+  border-radius: 2px;
+  z-index: -1;
+}
+
+.menu-icon:hover::before {
+  transform-origin: center;
+  transform: scaleX(1);
+}
+
+.menu-icon:hover * {
+  transition: 250ms;
+  color: var(--color_accent);
+}
+
+@media screen and (max-width: 1000px) {
+  .menu {
+    flex-direction: column;
+  }
+
+  .menu-item {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .menu.responsive {
+    flex-direction: column;
+    overflow: hidden;
+    align-items: flex-end;
+  }
+
+  .menu.responsive .menu-item {
+    display: block;
+  }
+}
