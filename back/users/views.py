@@ -1,10 +1,8 @@
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-
 
 from .validate import valid_user
 from items.models import Cart, Pantry, ItemModel
@@ -12,7 +10,6 @@ from items.serializer import serialize_item_model
 
 
 @api_view(['POST'])
-@csrf_exempt
 def register_user(request):
     try:
         password = request.data['password1']
@@ -37,7 +34,6 @@ def register_user(request):
 
 
 @api_view(['POST'])
-@csrf_exempt
 def login(request):
     try:
         password = request.data['password']

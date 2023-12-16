@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -11,7 +10,6 @@ from items.models import ItemModel, CartItem, PantryItem
 # Items
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def create_new_item(request):
     market = request.data['market']
     name = request.data['name'].title()
@@ -31,7 +29,6 @@ def create_new_item(request):
 # Cart
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def get_your_cart(request):
     try:
         market = request.data.get('market') or "Mercado"
@@ -45,7 +42,6 @@ def get_your_cart(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def add_item_to_cart(request):
     try:
         item_id = request.data['id']
@@ -65,7 +61,6 @@ def add_item_to_cart(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def update_item_to_cart(request):
     try:
         amount = request.data['amount']
@@ -84,7 +79,6 @@ def update_item_to_cart(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def buy_list(request):
     try:
         market = request.data['market']
@@ -110,7 +104,6 @@ def buy_list(request):
 # Pantry
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def get_your_pantry(request):
     market = request.data.get('market') or "Mercado"
     query = request.user.pantry.items.all()  # type: ignore
@@ -121,7 +114,6 @@ def get_your_pantry(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def remove_from_pantry(request):
     try:
         item_id = request.data['id']
@@ -137,7 +129,6 @@ def remove_from_pantry(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def change_date(request):
     try:
         item_id = request.data['id']
