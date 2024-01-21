@@ -1,4 +1,8 @@
 
+def serialize_carts(cart):
+    items = [{"name": item.name, "id": item.id} for item in cart]
+    return items
+
 
 def serialize_cart_item(cart_item):
     item_model = cart_item.item

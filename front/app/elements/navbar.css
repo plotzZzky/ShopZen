@@ -1,0 +1,127 @@
+nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  padding: 0;
+  z-index: 999;
+  backdrop-filter: blur(4px);
+  background-color: var(--color_accent);
+}
+
+.navbar-align {
+  display: flex;
+  margin: 0;
+  justify-content: right;
+}
+
+.menu {
+  display: flex;
+}
+
+.menu-item {
+  padding: 8px 1vw 6px;
+  margin: 0 10px;
+  color: var(--color_accent);
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  font-weight: bold;
+  font-size: clamp(0.9, 2vw, 1.1em);
+}
+
+.menu-item * {
+  color: var(--fontColor_sec);
+}
+
+.menu-item::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 2px;
+  transform-origin: center;
+  transform: scaleX(0);
+  transition: transform .15s ease-in-out;
+  z-index: -1;
+  border-bottom: 2px solid white;
+}
+
+.menu-item:hover::before {
+  transform-origin: center;
+  transform: scaleX(1);
+}
+
+.menu-icon {
+  display: none;
+  width: 26px;
+  height: 24px;
+  padding: 10px 4px 4px;
+  position: relative;
+  cursor: pointer;
+}
+
+.menu-icon * {
+  color: var(--fontColor_sec);
+}
+
+.menu-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 4px 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform .2s ease-in-out;
+  border-bottom: 2px solid var(--fontColor_sec);
+  background-color: var(--background);
+  z-index: -1;
+}
+
+.menu-icon:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+@media screen and (max-width: 1100px) {
+  .navbar-align {
+    width: 100%;
+    justify-content: left;
+  }
+
+  .menu {
+    flex-direction: column;
+  }
+
+  .menu-item {
+    display: none;
+    padding: 10px 2vw 4px;
+    margin: 0;
+  }
+
+  .menu-item::before {
+    border-radius: 0;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .menu.responsive {
+    flex-direction: column;
+    overflow: hidden;
+    align-items: flex-start;
+  }
+
+  .menu.responsive .menu-item {
+    display: block;
+    text-align: left;
+  }
+
+  .menu-item::before {
+    inset: 6px 0 2px;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform .2s ease-in-out;
+  }
+  
+  .menu-item:hover::before {
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+}
