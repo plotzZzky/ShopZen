@@ -1,10 +1,9 @@
 'use client'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import NavBar from "../../elements/navbar";
-import InputPwd from '../../elements/inputs/inputPwd';
-import InputUser from '../../elements/inputs/inputUser';
-import InputAnswer from '../../elements/inputs/inputAnswer';
+import InputPwd from '@comps/inputs/inputPwd';
+import InputUser from '@comps/inputs/inputUser';
+import InputAnswer from '@comps/inputs/inputAnswer';
 
 
 export default function Login() {
@@ -86,7 +85,6 @@ export default function Login() {
 
   return (
     <>
-    <NavBar></NavBar>
       <div className='page banner'>
         <div className="login-page">
         <div className="login-alert" id='loginAlert'>

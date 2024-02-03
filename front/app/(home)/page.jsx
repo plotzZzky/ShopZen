@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import NavBar from './elements/navbar'
 
 
 export default function Home() {
@@ -59,12 +57,8 @@ export default function Home() {
     }
   }
 
-  function goToGitHub() { router.push("https://github.com/plotzzzky") }
-
   return (
     <>
-      <NavBar></NavBar>
-
       <div className='page-home banner' id='Start'>
         <h1 className='big-title'> ShopZen <FontAwesomeIcon icon={faCartShopping} className='market-icon' /> </h1>
         <h2 className='subtitle'> Simplifique sua vida com uma lista de compras online!</h2>
@@ -89,13 +83,6 @@ export default function Home() {
         <h1> Duvias frequentes: </h1>
         {faqItems()}
       </div>
-
-      <footer id="footer">
-        <p className="link" onClick={goToGitHub}>
-          <FontAwesomeIcon icon={faGithub} />
-          <a> GitHub </a>
-        </p>
-      </footer>
     </>
   )
 }

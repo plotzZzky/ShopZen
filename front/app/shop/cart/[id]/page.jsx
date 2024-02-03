@@ -1,11 +1,10 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import NavBar from "@/app/elements/navbar";
-import ModalAdd from "@/app/elements/modalAddItem";
-import ModalNewItem from "@/app/elements/modalNewItem";
-import ShoppingBar from "@/app/elements/shoppingBar";
-import ShoppingCard from "@/app/elements/shoppingCard";
+import ModalAdd from "@comps/modalAddItem";
+import ModalNewItem from "@comps/modalNewItem";
+import ShoppingBar from "@comps/shoppingBar";
+import ShoppingCard from "@comps/shoppingCard";
 
 
 export default function Cart({ params }) {
@@ -76,8 +75,6 @@ export default function Cart({ params }) {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className='page'>
         <div className='align-cards'>
           <ShoppingBar show_add={showModalAdd} show_new={showModalNew} market={setMarket} getCart={getCart} cartId={params.id}></ShoppingBar>

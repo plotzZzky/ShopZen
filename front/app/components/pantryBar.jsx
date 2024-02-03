@@ -1,4 +1,4 @@
-
+'use client'
 export default function PantryBar(props) {
 
   function filterItems(event) {

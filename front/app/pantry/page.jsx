@@ -1,9 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import NavBar from '../elements/navbar';
-import PantryBar from '../elements/pantryBar';
-import PantryCard from '../elements/pantryCard';
+import PantryBar from '@comps/pantryBar';
+import PantryCard from '@comps/pantryCard';
 
 
 export default function Pantry() {
@@ -62,8 +61,6 @@ export default function Pantry() {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className='page'>
         <div className='align-cards'>
           <PantryBar market={setMarket} getItems={getPantryItems}></PantryBar>

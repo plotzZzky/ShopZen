@@ -1,10 +1,9 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import NavBar from "../elements/navbar";
-import CartBar from "../elements/cartBar";
-import CartCard from "../elements/cartCard";
-import ModalNewCart from "../elements/modalNewCart";
+import CartBar from "@comps/cartBar";
+import CartCard from "@comps/cartCard";
+import ModalNewCart from "@comps/modalNewCart";
 
 
 export default function Shop() {
@@ -62,8 +61,6 @@ export default function Shop() {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className='page'>
         <div className='align-cards'>
           <CartBar market={setMarket} getCart={getAllCarts}></CartBar>
