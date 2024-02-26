@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Modelo do item base, usado para criar os item para compra e da dispensa
 class ItemModel(models.Model):
     name = models.CharField(max_length=255)
-    market = models.CharField(max_length=128)
+    market = models.CharField(max_length=255)
     validate = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()

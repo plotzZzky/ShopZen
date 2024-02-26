@@ -9,13 +9,11 @@ export default function CartCard(props) {
 
   function deleteCart(event) {
     event.stopPropagation() // Evita que chame a função showCart() ao clickar no botão de delete
-    const formData = new FormData();
-    formData.append("cartId", props.id)
-
-    let url = "http://127.0.0.1:8000/items/cart/del/"
-    let data = {
-      method: 'POST',
-      body: formData,
+    const cartId = props.id
+    const url = `http://127.0.0.1:8000/shop/cart/${cartId}/`
+    
+    const data = {
+      method: 'DELETE',
       headers: { Authorization: 'Token ' + getToken }
     }
     fetch(url, data)

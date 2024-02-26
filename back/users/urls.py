@@ -1,11 +1,10 @@
-from django.urls import path
+from rest_framework import routers
+
 from . import views
 
 
-urlpatterns = [
-    path('login/', views.login_user),
-    path('register/', views.register_user),
-    path('update/', views.update_user),
-    path('recovery/', views.recovery_password),
-    path('question/', views.receive_your_question),
-]
+users_router = routers.DefaultRouter()
+users_router.register(r'login', views.LoginView, basename='login')
+users_router.register(r'register', views.RegisterView, basename='register')
+users_router.register(r'recovery', views.RecoveryPassword, basename='recovery')
+users_router.register(r'question', views.ReceiverYourQuestion, basename='question')

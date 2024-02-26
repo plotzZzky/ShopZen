@@ -18,11 +18,11 @@ export default function ShoppingCard(props) {
 
     const formData = new FormData();
     formData.append("amount", value)
-    formData.append("itemId", props.itemId)
+    formData.append("itemId", props.modelId)
     formData.append("cartId", props.cartId)
 
-    let url = "http://127.0.0.1:8000/items/cart/update/"
-    let data = {
+    const url = "http://127.0.0.1:8000/shop/item/"
+    const data = {
       method: 'POST',
       body: formData,
       headers: { Authorization: 'Token ' + getToken }

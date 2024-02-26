@@ -14,8 +14,8 @@ export default function ModalNewCart(props) {
     formData.append("cartName", getName)
     formData.append("market", market)
 
-    let url = "http://127.0.0.1:8000/items/cart/new/"
-    let data = {
+    const url = "http://127.0.0.1:8000/shop/cart/"
+    const data = {
       method: 'POST',
       body: formData,
       headers: { Authorization: 'Token ' + getToken }

@@ -25,21 +25,21 @@ export default function Cart({ params }) {
 
   // Busca a listas com os produtos deste carrinho no back
   function getCart(market = getMarket) {
-    let url = "http://127.0.0.1:8000/items/cart/";
+    let url = "http://127.0.0.1:8000/shop/item/all/";
     const formData = new FormData();
     formData.append("cartId", params.id)
 
-    let data = {
+    const data = {
       method: 'POST',
-      body: formData,
       headers: { Authorization: 'Token ' + getToken },
+      body: formData
     };
     
     fetch(url, data)
       .then((res) => res.json())
       .then((data) => {
-        createShoppingCards(data.items);
-        setCartName(data.name)
+        createShoppingCards(data['items']);
+        setCartName(data['name'])
       });
   }
   
@@ -48,7 +48,9 @@ export default function Cart({ params }) {
       setCards() // Usado para forçar a renderização da nova lista
       setCards(
         value.map((data, index) => (
-          <ShoppingCard key={index} name={data.name} amount={data.amount} cartId={params.id} itemId={data.id} delete={() => removeShopCard(index)}></ShoppingCard>
+          <ShoppingCard key={index} name={data.item.name} amount={data.amount} cartId={data.cart} itemId={data.id} 
+           modelId={data.item.id} delete={() => removeShopCard(index)}>
+          </ShoppingCard>
         ))
       );
     }

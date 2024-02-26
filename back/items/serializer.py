@@ -1,30 +1,31 @@
+from rest_framework.serializers import ModelSerializer
 
-def serialize_carts(cart):
-    items = [{"name": item.name, "id": item.id} for item in cart]
-    return items
-
-
-def serialize_cart_item(cart_item):
-    item_model = cart_item.item
-    item_id = cart_item.id
-    name = item_model.name
-    market = item_model.market
-    amount = cart_item.amount
-    return {'id': item_id, 'name': name, 'market': market, 'amount': amount}
+from .models import CartItem, Cart, PantryItem, ItemModel
 
 
-def serialize_pantry_item(pantry_item):
-    item_model = pantry_item.item
-    item_id = pantry_item.id
-    name = item_model.name
-    market = item_model.market
-    validate = item_model.validate
-    date = pantry_item.date
-    return {'id': item_id, 'name': name, 'market': market, 'validate': validate, 'date': date}
+class ItemModelSerializer(ModelSerializer):
+    class Meta:
+        model = ItemModel
+        fields = '__all__'
 
 
-def serialize_item_model(item):
-    item_id = item.id
-    name = item.name
-    market = item.market
-    return {'id': item_id, 'name': name, 'market': market}
+class CartSerializer(ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+
+class CartItemSerializer(ModelSerializer):
+    item = ItemModelSerializer()
+
+    class Meta:
+        model = CartItem
+        fields = '__all__'
+
+
+class PantryItemSerializer(ModelSerializer):
+    item = ItemModelSerializer()
+
+    class Meta:
+        model = PantryItem
+        fields = '__all__'

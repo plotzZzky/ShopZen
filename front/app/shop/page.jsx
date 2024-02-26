@@ -20,20 +20,20 @@ export default function Shop() {
 
   // Busca todas as listas de compras (carts) no back
   function getAllCarts(market = getMarket) {
-    const url = "http://127.0.0.1:8000/items/carts/";
+    const url = "http://127.0.0.1:8000/shop/cart/all/";
     const formData = new FormData();
     formData.append("market", market)
 
     const data = {
       method: 'POST',
-      body: formData,
       headers: { Authorization: 'Token ' + getToken },
+      body: formData
     };
 
     fetch(url, data)
       .then((res) => res.json())
       .then((data) => {
-        createCartCards(data['carts']);
+        createCartCards(data);
       });
   }
 

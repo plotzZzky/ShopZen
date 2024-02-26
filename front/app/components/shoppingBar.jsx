@@ -28,8 +28,8 @@ export default function ShoppingBar(props) {
     const formData = new FormData();
     formData.append("cartId", props.cartId)
 
-    let url = "http://127.0.0.1:8000/items/cart/buy/"
-    let data = {
+    const url = "http://127.0.0.1:8000/shop/cart/buy/"
+    const data = {
       method: 'POST',
       body: formData,
       headers: { Authorization: 'Token ' + getToken }

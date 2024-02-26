@@ -18,7 +18,6 @@ export default function PantryCard(props) {
 
     const result = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-    console.log(props.data.date)
     return !props.data.date ? (
       <a><FontAwesomeIcon icon={faQuestion} /></a>
     ) : result <= 0 ? (
@@ -31,14 +30,15 @@ export default function PantryCard(props) {
   // Muda a data de fabricação do produto no back
   function changeDate(event) {
     const value = event.target.value;
+    const itemId = props.data.id
+
     const formData = new FormData();
     formData.append("date", value)
-    formData.append("itemId", props.data.id)
     setDate(value)
 
-    let url = "http://127.0.0.1:8000/items/pantry/update/"
-    let data = {
-      method: 'POST',
+    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
+    const data = {
+      method: 'PATCH',
       body: formData,
       headers: { Authorization: 'Token ' + getToken }
     }
@@ -47,13 +47,11 @@ export default function PantryCard(props) {
 
   // Remove o item da despensa no back
   function removeFromPantry() {
-    const formData = new FormData();
-    formData.append("id", props.data.id)
+    const itemId = props.data.id
+    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
 
-    let url = "http://127.0.0.1:8000/items/pantry/delete/"
-    let data = {
-      method: 'POST',
-      body: formData,
+    const data = {
+      method: 'DELETE',
       headers: { Authorization: 'Token ' + getToken }
     }
     fetch(url, data)
@@ -63,7 +61,7 @@ export default function PantryCard(props) {
 
   return (
     <div className='card'>
-      <a className='card-name'> {props.data.name} </a>
+      <a className='card-name'> {props.data.item.name} </a>
       <div className='pantry-align-btn'>
         {ALERT()}
         <input className='card-date' type='date' value={getDate} onChange={changeDate}></input>

@@ -14,8 +14,8 @@ export default function ModalNewItem(props) {
     formData.append("name", getName);
     formData.append("validate", getValidate);
   
-    let url = "http://127.0.0.1:8000/items/new/";
-    let data = {
+    const url = "http://127.0.0.1:8000/shop/new/";
+    const data = {
       method: 'POST',
       body: formData,
       headers: { Authorization: 'Token ' + getToken }
@@ -29,7 +29,7 @@ export default function ModalNewItem(props) {
         return res.json();
       })
       .then((data) => {
-        const items = JSON.stringify(data['items']);
+        const items = JSON.stringify(data);
         sessionStorage.setItem("items", items);
         closeModal();
       })

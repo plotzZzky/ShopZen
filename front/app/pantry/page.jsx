@@ -24,11 +24,11 @@ export default function Pantry() {
 
   // Recebe a lista de items da dispensa do usuario
   function getPantryItems(market) {
-    let url = "http://127.0.0.1:8000/items/pantry/";
+    const url = "http://127.0.0.1:8000/shop/pantry/all/";
     const formData = new FormData();
     formData.append("market", market != undefined ? market : document.getElementById("selectMarket").value)
 
-    let data = {
+    const data = {
       method: 'POST',
       body: formData,
       headers: { Authorization: 'Token ' + getToken },
@@ -36,7 +36,7 @@ export default function Pantry() {
     fetch(url, data)
       .then((res) => res.json())
       .then((data) => {
-        createPantryCards(data['items']);
+        createPantryCards(data);
       });
   }
 

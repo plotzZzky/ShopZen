@@ -1,4 +1,6 @@
 import { Inter } from 'next/font/google'
+import NavBar from '@comps/navbar'
+import Footer from '@comps/footer'
 import '../../../globals.css'
 import '../../page.css'
 
@@ -11,10 +13,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-        <body className={inter.className}>
-            {children}
-        </body>
-    </html>
+    <section>
+      {children}
+    </section>
   )
 }
