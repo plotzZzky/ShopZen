@@ -4,7 +4,8 @@ nav {
   padding: 0;
   z-index: 999;
   backdrop-filter: blur(4px);
-  background-color: var(--color_accent);
+  background-color: white;
+  box-shadow: var(--shadow);
 }
 
 .navbar-align {
@@ -18,9 +19,8 @@ nav {
 }
 
 .menu-item {
-  padding: 8px 1vw 6px;
+  padding: 1.2vh 2vw;
   margin: 0 10px;
-  color: var(--color_accent);
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -29,23 +29,26 @@ nav {
 }
 
 .menu-item * {
-  color: var(--fontColor_sec);
+  color: var(--color_accent);
 }
 
 .menu-item::before {
   content: '';
   position: absolute;
-  inset: 0 0 2px;
-  transform-origin: center;
-  transform: scaleX(0);
-  transition: transform .15s ease-in-out;
+  inset: 1px;
+  transform-origin: left;
+  transition: all .2s ease-in-out;
+  transform: scaleY(1.1);
+  opacity: 0;
   z-index: -1;
-  border-bottom: 2px solid white;
+  border-top: 2px solid var(--color_accent);
+  border-bottom: 2px solid var(--color_accent);
 }
 
 .menu-item:hover::before {
-  transform-origin: center;
-  transform: scaleX(1);
+  transform-origin: left;
+  transform: scaleY(1);
+  opacity: 0.8;
 }
 
 .menu-icon {

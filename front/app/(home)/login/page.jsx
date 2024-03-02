@@ -71,18 +71,20 @@ export default function Login() {
     }
 
     fetch(url, info)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.msg) {
-          const tip = document.getElementById("LoginTip")
-          tip.innerText = data.msg
-        } else {
-          const items = JSON.stringify(data['items'])
-          sessionStorage.setItem("token", data.token)
-          sessionStorage.setItem("items", items)
-          router.push('/shop')
-        }
-      })
+    .then(res => res.json())
+
+    .then((data) => {
+      if (data.token) {
+        const items = JSON.stringify(data['items'])
+        sessionStorage.setItem("token", data.token)
+        sessionStorage.setItem("items", items)
+        router.push('/shop')
+
+      } else {
+        const tip = document.getElementById("LoginTip")
+        tip.innerText = data.error
+      }
+    })
   }
 
   // Verifica se os campos de cadastro estão preenchidas com informções validas
@@ -95,9 +97,8 @@ export default function Login() {
     }
   }
 
-  // Função para registar um novo usuario, envia o form com as informações (exceto imagem) e recebe o nome randonizado da imagem do usuario
   function SignUpFunc() {
-    let url = `http://127.0.0.1:8000/users/register/`
+    const url = `http://127.0.0.1:8000/users/register/`
 
     const formData = new FormData();
     formData.append("username", getUsername);
@@ -112,30 +113,19 @@ export default function Login() {
     }
 
     fetch(url, requestData)
-      .then(async (res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          const data = await res.json();
-          throw new Error(`${data.msg} status: ${res.status}`);
-        }
-      })
-
+      .then(res => res.json())
       .then((data) => {
-        if (data.msg) {
-          const tip = document.getElementById("SignTip")
-          tip.innerText = data.msg
-        } else {
+        if (data.token) {
           const items = JSON.stringify(data['items'])
           sessionStorage.setItem("token", data.token)
           sessionStorage.setItem("items", items)
           router.push('/shop')
+
+        } else {
+          const tip = document.getElementById("LoginTip")
+          tip.innerText = data.error
         }
       })
-
-      .catch((error) => {
-        alert(error.message)
-      });
   }
 
   useEffect(() => {

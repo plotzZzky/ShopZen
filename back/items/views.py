@@ -102,7 +102,8 @@ class ItemCartView(ModelViewSet):
             item_model = ItemModel.objects.get(pk=item_id)
             item, created = CartItem.objects.get_or_create(item=item_model, cart=cart)
             if not created:
-                if amount is int:
+                print(amount)
+                if amount:
                     if int(amount) != 0:
                         item.amount = amount
                         item.save()

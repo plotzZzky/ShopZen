@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.permissions import IsAuthenticated
@@ -47,14 +47,14 @@ class RegisterView(ModelViewSet):
             else:
                 raise ValueError()
         except (AttributeError, KeyError, ValueError):
-            return Response({"msg": "Informações incorretas!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Informações incorretas!"}, status=status.HTTP_401_UNAUTHORIZED)
         except IntegrityError as error:
             if 'auth_user_username_key' in str(error):
                 field = 'Nome de usuario'
             else:
                 field = 'O e-mail'
             msg = f"{field} já existe e não pode ser cadastrado!"
-            return Response({"msg": msg}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": msg}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(ModelViewSet):
@@ -77,6 +77,16 @@ class LoginView(ModelViewSet):
                 return Response({"error": "Login incorreto!"}, status=status.HTTP_401_UNAUTHORIZED)
         except (KeyError, ValueError):
             return Response({"error": "Login incorreto"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = []
+    serializer_class = UserSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        logout(request.user)
+        return Response(status=status.HTTP_200_OK)
 
 
 class RecoveryPassword(ModelViewSet):
