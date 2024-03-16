@@ -54,10 +54,10 @@ class CartView(ModelViewSet):
                 return Response({"msg": f"Carrrinho {cart_name} criado com  sucesso!"}, status=status.HTTP_200_OK)
             else:
                 msg = "O nome do carrinho deve ter mais que dois digitos!"
-                return Response({"msg": msg}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": msg}, status=status.HTTP_400_BAD_REQUEST)
         except (KeyError, ValueError):
             msg = "Não foi possivel criar o novo carinho"
-            return Response({"error": msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": msg}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
     def buy(self, request, *args, **kwargs):
@@ -95,14 +95,13 @@ class ItemCartView(ModelViewSet):
         try:
             cart_id = request.data['cartId']
             item_id = request.data['itemId']
-            amount = request.data['amount']
+            amount = request.data.get('amount', None)
             user = request.user
 
             cart = Cart.objects.get(pk=cart_id, user=user)
             item_model = ItemModel.objects.get(pk=item_id)
             item, created = CartItem.objects.get_or_create(item=item_model, cart=cart)
             if not created:
-                print(amount)
                 if amount:
                     if int(amount) != 0:
                         item.amount = amount
@@ -117,7 +116,7 @@ class ItemCartView(ModelViewSet):
                     return Response({"msg": "Item adicionado"}, status=status.HTTP_200_OK)
             else:
                 return Response({"msg": "Item criado"}, status=status.HTTP_201_CREATED)
-        except (KeyError, ValueError):
+        except (TypeError, KeyError, ValueError, ObjectDoesNotExist):
             return Response({"error": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)
 
 

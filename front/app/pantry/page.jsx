@@ -61,7 +61,7 @@ export default function Pantry() {
 
   return (
     <>
-      <div className='page'>
+      <div className='page banner'>
         <div className='align-cards'>
           <PantryBar market={setMarket} getItems={getPantryItems}></PantryBar>
           <a className="page-title"> Sua dispensa </a>

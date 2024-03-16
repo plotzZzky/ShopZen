@@ -77,7 +77,7 @@ export default function Cart({ params }) {
 
   return (
     <>
-      <div className='page'>
+      <div className='page banner'>
         <div className='align-cards'>
           <ShoppingBar show_add={showModalAdd} show_new={showModalNew} market={setMarket} getCart={getCart} cartId={params.id}></ShoppingBar>
           <a className="page-title"> {getCartName} </a>

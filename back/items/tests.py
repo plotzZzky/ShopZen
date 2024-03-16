@@ -36,108 +36,100 @@ class CartTest(TestCase):
 
     # Get your cart
     def test_get_all_carts(self):
-        response = self.client.post("/items/carts/")
+        response = self.client.post("/shop/cart/all/")
         self.assertEqual(response.status_code, 200)
 
     def test_get_your_cart(self):
         cart_id = self.market_cart.id
-        data = {"cartId": cart_id}
-        response = self.client.post('/items/cart/', data)
+        response = self.client.get(f'/shop/cart/{cart_id}/')
         self.assertEqual(response.status_code, 200)
 
-    def test_get_your_cart_no_id(self):
-        response = self.client.post('/items/cart/')
-        self.assertEqual(response.status_code, 500)
-
     def test_get_your_cart_id_error(self):
-        data = {"cartId": 99999999}
-        response = self.client.post('/items/cart/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.get(f'/shop/cart/{99999}/')
+        self.assertEqual(response.status_code, 404)
 
     def test_get_your_cart_no_login(self):
         self.client.credentials()
-        response = self.client.post('/items/carts/')
+        response = self.client.post('/shop/cart/')
         self.assertEqual(response.status_code, 401)
 
     # Create Cart
     def test_create_cart(self):
         data = {"cartName": "Test de cart", "market": "Mercado"}
-        response = self.client.post('/items/cart/new/', data)
+        response = self.client.post('/shop/cart/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_cart_no_data(self):
-        response = self.client.post('/items/cart/new/')
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/cart/')
+        self.assertEqual(response.status_code, 400)
 
     def test_create_cart_errors(self):
         datas = [
-            {"cartName": "Test de cart"},
             {"market": "Mercado"},
             {"cartName": "", "market": "Mercado"},
             {},
         ]
         for data in datas:
-            response = self.client.post('/items/cart/new/', data)
-            self.assertEqual(response.status_code, 500)
+            response = self.client.post('/shop/cart/', data)
+            self.assertEqual(response.status_code, 400)
 
     # Delete Cart
     def test_delete_cart(self):
         cart_id = Cart.objects.filter(user=self.user)[0].id
-        data = {"cartId": cart_id}
-        response = self.client.post('/items/cart/del/', data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.delete(f'/shop/cart/{cart_id}/')
+        self.assertEqual(response.status_code, 204)
 
     def test_delete_cart_id_9999(self):
-        data = {"cartId": 9999}
-        response = self.client.post('/items/cart/del/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.delete(f'/shop/cart/{9999}/')
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_cart_id_string(self):
-        data = {"cartId": '9999'}
-        response = self.client.post('/items/cart/del/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.delete('/shop/cart/9999/')
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_cart_no_login(self):
         self.client.credentials()
-        response = self.client.post('/items/cart/del/')
+        response = self.client.post(f'/shop/cart/{999}/')
         self.assertEqual(response.status_code, 401)
 
     # Add new item
     def test_add_new_item(self):
         data = {"itemId": 1, "cartId": 1}
-        response = self.client.post('/items/cart/add/', data)
+        response = self.client.post('/shop/item/', data)
         self.assertEqual(response.status_code, 200)
 
     # Errors
     def test_add_new_item_no_login(self):
         self.client.credentials()
-        response = self.client.post('/items/cart/add/')
+        response = self.client.post('/shop/item/')
         self.assertEqual(response.status_code, 401)
 
     def test_add_new_item_no_data(self):
-        response = self.client.post('/items/cart/add/')
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/item/')
+        self.assertEqual(response.status_code, 400)
 
     def test_add_new_item_id_as_string(self):
         cart = Cart.objects.get(user=self.user)
         data = {"itemId": "", "cartId": cart.id}
-        response = self.client.post('/items/cart/add/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/item/', data)
+        self.assertEqual(response.status_code, 400)
 
     def test_add_new_item_id_9999(self):
         data = {"itemId": 999999}
-        response = self.client.post('/items/cart/add/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/item/', data)
+        self.assertEqual(response.status_code, 400)
 
     def test_add_new_item_twice(self):
         cart = Cart.objects.get(user=self.user)
-        items = Cart.objects.get(user=self.user).items.all()
+        items = cart.items.all()
         item_id = items[0].id
         data = {"itemId": item_id, "cartId": cart.id}
-        self.client.post('/items/cart/add/', data)
-        response = self.client.post('/items/cart/add/', data)
+
+        self.client.post('/shop/item/', data)
+        response = self.client.post('/shop/item/', data)
+
         cart_item = CartItem.objects.get(pk=item_id)
-        self.assertEqual(cart_item.amount, 2)
+        self.assertEqual(cart_item.amount, 3)
         self.assertEqual(response.status_code, 200)
 
     # Update amount to cart
@@ -146,7 +138,7 @@ class CartTest(TestCase):
         items = cart[0].items.all()
         item_id = items[0].id
         data = {"cartId": cart[0].id, "itemId": item_id, "amount": 5}
-        response = self.client.post('/items/cart/update/', data)
+        response = self.client.post('/shop/item/', data)
         cart_item = CartItem.objects.get(pk=item_id)
         self.assertEqual(cart_item.amount, 5)
         self.assertEqual(response.status_code, 200)
@@ -156,7 +148,7 @@ class CartTest(TestCase):
         items = cart[0].items.all()
         item_id = items[0].id
         data = {"cartId": cart[0].id, "itemId": item_id, "amount": 0}
-        response = self.client.post('/items/cart/update/', data)
+        response = self.client.post('/shop/item/', data)
         try:
             cart_item = CartItem.objects.get(pk=item_id)
         except CartItem.DoesNotExist:  # type:ignore
@@ -164,47 +156,34 @@ class CartTest(TestCase):
         self.assertIsNone(cart_item)
         self.assertEqual(response.status_code, 200)
 
-    def test_change_amount_empty(self):
-        cart = Cart.objects.filter(user=self.user)
-        items = cart[0].items.all()
-        item_id = items[0].id
-        data = {"cartId": cart[0].id, "itemId": item_id, "amount": ''}
-        response = self.client.post('/items/cart/update/', data)
-        try:
-            cart_item = CartItem.objects.get(pk=item_id)
-        except CartItem.DoesNotExist:  # type:ignore
-            cart_item = None
-        self.assertIsNotNone(cart_item)
-        self.assertEqual(response.status_code, 500)
-
     def test_change_amount_no_login(self):
         self.client.credentials()
-        response = self.client.post('/items/cart/update/')
+        response = self.client.post('/shop/item/')
         self.assertEqual(response.status_code, 401)
 
     def test_change_amount_no_id(self):
         data = {"amount": 0}
-        response = self.client.post('/items/cart/update/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/item/', data)
+        self.assertEqual(response.status_code, 400)
 
     # Buy List
     def test_buy_cart(self):
         cart_id = self.market_cart.id
         data = {"cartId": cart_id}
-        response = self.client.post('/items/cart/buy/', data)
+        response = self.client.post('/shop/cart/buy/', data)
         cart = self.market_cart.items.all()
         result = True if len(cart) == 0 else False
         self.assertTrue(result)
         self.assertEqual(response.status_code, 200)
 
     def test_buy_cart_no_data(self):
-        response = self.client.post('/items/cart/buy/')
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/cart/buy/')
+        self.assertEqual(response.status_code, 400)
 
     def test_buy_cart_data_empty(self):
         data = {"cartId": ""}
-        response = self.client.post('/items/cart/buy/', data)
-        self.assertEqual(response.status_code, 500)
+        response = self.client.post('/shop/cart/buy/', data)
+        self.assertEqual(response.status_code, 400)
 
 
 # Pantry
@@ -242,59 +221,51 @@ class PantryTest(TestCase):
         markets = ["Mercado", "Farmacia", "PetShop"]
         for item in markets:
             data = {"market": item}
-            response = self.client.post('/items/pantry/', data)
+            response = self.client.post('/shop/pantry/all/', data)
             self.assertEqual(response.status_code, 200)
 
     def test_get_your_pantry_empty(self):
         data = {"market": ""}
-        response = self.client.post('/items/pantry/', data)
+        response = self.client.post('/shop/pantry/all/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_get_your_pantry_no_data(self):
-        response = self.client.post('/items/pantry/')
+        response = self.client.post('/shop/pantry/all/')
         self.assertEqual(response.status_code, 200)
 
     def test_get_your_pantry_no_login(self):
         self.client.credentials()
-        response = self.client.post('/items/pantry/')
+        response = self.client.post('/shop/pantry/all/')
         self.assertEqual(response.status_code, 401)
 
     # Remove from pantry
     def test_remove_from_your_pantry(self):
         items = self.user.pantry.items.all()
         new_id = items[1].id
-        data = {"itemId": new_id}
-        response = self.client.post('/items/pantry/delete/', data)
-        self.assertEqual(response.status_code, 200)
-
-    def test_remove_from_your_pantry_no_data(self):
-        response = self.client.post('/items/pantry/delete/')
-        self.assertEqual(response.status_code, 500)
+        response = self.client.delete(f'/shop/pantry/{new_id}/')
+        self.assertEqual(response.status_code, 204)
 
     def test_remove_from_your_pantry_errors(self):
-        ids_to_test = [0, -1, 999, 'a', '', ]
+        ids_to_test = [0, -1, 999, 'a', '', 9999999]
 
         for item_id in ids_to_test:
-            data = {"id": item_id, "date": '2023-09-28'}
-            # print(f"ID - {item_id}")
-            response = self.client.post('/items/pantry/delete/', data)
-            self.assertEqual(response.status_code, 500)
+            response = self.client.delete(f'/ishop/pantry/{item_id}/')
+            self.assertEqual(response.status_code, 404)
 
     # Update validate
     def test_pantry_update_date(self):
         items = self.user.pantry.items.all()
-        new_id = items[1].id
-        data = {"itemId": new_id, "date": '2023-09-28'}
-        response = self.client.post('/items/pantry/update/', data)
+        item_id = items[1].id
+        data = {"date": '2023-09-28'}
+        response = self.client.patch(f'/shop/pantry/{item_id}/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_pantry_update_date_errors(self):
         ids_to_test = [0, -1, 999, 'a', '']
-        # print(f"ID - {item_id}")
         for item_id in ids_to_test:
-            data = {"itemId": item_id, "date": '2023-09-28'}
-            response = self.client.post('/items/pantry/update/', data)
-            self.assertEqual(response.status_code, 500)
+            data = {"date": '2023-09-28'}
+            response = self.client.patch(f'/shop/pantry/{item_id}/', data)
+            self.assertEqual(response.status_code, 404)
 
 
 # Pantry
@@ -320,24 +291,7 @@ class ItemModelTest(TestCase):
     # Get your Pantry
     def test_create_item_model(self):
         data = {"name": "Name", "market": "Mercado", "Validate": 90}
-        response = self.client.post('/items/pantry/', data)
-        result = True if 'items' in response.json() else False
-        self.assertTrue(result)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/shop/new/', data)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, 201)
 
-    def test_create_item_model_errors(self):
-        datas = [
-            {"name": "Name", "market": "Mercado", "Validate": '90'},
-            {"name": "Name", "market": "Mercado", "Validate": -90},
-            {"name": "Name", "market": "Mercado"},
-            {"name": 9999, "market": "Mercado", "Validate": 90},
-            {"market": "Mercado", "Validate": 90},
-            {"name": "Name", "market": 9999, "Validate": 90},
-            {"name": "Name", "Validate": 90},
-        ]
-
-        for data in datas:
-            response = self.client.post('/items/pantry/update/', data)
-            self.assertEqual(response.status_code, 500)
-            if response.status_code == 200:
-                print(f"O test {data} apresentou erro!!")

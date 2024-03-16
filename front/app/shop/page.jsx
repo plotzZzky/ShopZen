@@ -61,7 +61,7 @@ export default function Shop() {
 
   return (
     <>
-      <div className='page'>
+      <div className='page banner'>
         <div className='align-cards'>
           <CartBar market={setMarket} getCart={getAllCarts}></CartBar>
           <a className="page-title"> Suas listas de compras </a>

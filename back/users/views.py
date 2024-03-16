@@ -102,7 +102,7 @@ class RecoveryPassword(ModelViewSet):
             password = request.data['password']
             pwd = request.data['pwd']
             user = User.objects.get(username=username)
-            if check_password(answer, user.recovery.answer):
+            if check_password(answer, user.profile.answer):
                 if validate_password(password, pwd):
                     user.set_password(password)
                     user.save()
@@ -125,7 +125,7 @@ class ReceiverYourQuestion(ModelViewSet):
         try:
             username = request.data['username']
             user = User.objects.get(username=username)
-            question = user.recovery.question
+            question = user.profile.question
             return Response({"question": question}, status=status.HTTP_200_OK)
         except (KeyError, ValueError, ObjectDoesNotExist):
             return Response({"error": "Usuario não encontrado"}, status=status.HTTP_400_BAD_REQUEST)
