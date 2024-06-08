@@ -1,12 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@comps/authContext';
 import PantryBar from '@comps/pantryBar';
 import PantryCard from '@comps/pantryCard';
 
 
 export default function Pantry() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const [getItems, setItems] = useState([]);
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
@@ -62,7 +63,7 @@ export default function Pantry() {
   return (
     <>
       <div className='page banner'>
-        <div className='align-cards'>
+        <div className='cards'>
           <PantryBar market={setMarket} getItems={getPantryItems}></PantryBar>
           <a className="page-title"> Sua dispensa </a>
           {getCards}

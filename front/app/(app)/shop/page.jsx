@@ -1,13 +1,14 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@comps/authContext";
 import CartBar from "@comps/cartBar";
 import CartCard from "@comps/cartCard";
 import ModalNewCart from "@comps/modalNewCart";
 
 
 export default function Shop() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
   const router = useRouter();
@@ -18,16 +19,13 @@ export default function Shop() {
     }
   }
 
-  // Busca todas as listas de compras (carts) no back
-  function getAllCarts(market = getMarket) {
-    const url = "http://127.0.0.1:8000/shop/cart/all/";
-    const formData = new FormData();
-    formData.append("market", market)
+  function getAllCarts() {
+    // Busca todas as listas de compras (carts) no back
+    const url = "http://127.0.0.1:8000/shop/cart/";
 
     const data = {
-      method: 'POST',
+      method: 'GET',
       headers: { Authorization: 'Token ' + getToken },
-      body: formData
     };
 
     fetch(url, data)
@@ -62,11 +60,12 @@ export default function Shop() {
   return (
     <>
       <div className='page banner'>
-        <div className='align-cards'>
+        <div className='cards'>
           <CartBar market={setMarket} getCart={getAllCarts}></CartBar>
           <a className="page-title"> Suas listas de compras </a>
           {getCards}
         </div>
+        
         <ModalNewCart getAllCarts={getAllCarts} ></ModalNewCart>
       </div>
     </>

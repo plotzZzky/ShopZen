@@ -1,12 +1,13 @@
 'use client'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@comps/authContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Home() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const router = useRouter();
 
   const FAQ = [
@@ -39,8 +40,8 @@ export default function Home() {
     '- Equipe de suporte dedicada para ajudar em qualquer dúvida ou problema.'
   ]
 
-  // Cria os items do faq
   const faqItems = () => {
+    // Cria os items do faq
     return FAQ.map((data, index) => (
       <details key={index}>
         <summary> {data.question} </summary>
@@ -55,6 +56,13 @@ export default function Home() {
     } else {
       router.push("/login");
     }
+  }
+
+  const BENEFITSCARDS = () => {
+    // Cria os cards dos beneficios de usar a shopzen
+    return BENEFITS.map((data) => (
+      <p> {data} </p>
+    ))
   }
 
   return (
@@ -72,11 +80,8 @@ export default function Home() {
         <h1> Sobre nós... </h1>
         <h2> Somos uma solução completa para listas de compras online. Com design intuitivo e funcionalidades poderosas, o ShopZen torna o processo de compras mais eficiente e organizado. Crie, compartilhe e gerencie suas listas de compras de maneira simples e conveniente.</h2>
         <h1> Por que usar... </h1>
-        {
-          BENEFITS.map((data) => (
-            <p> {data} </p>
-          ))
-        }
+
+        {BENEFITSCARDS()}
       </div>
 
       <div className='page-home' id='Faq'>

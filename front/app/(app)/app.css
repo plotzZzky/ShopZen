@@ -80,11 +80,11 @@ option {
 }
 
 /* Cards */
-.align-cards {
+.cards {
   display: flex;
   flex-direction: column;
   max-width: 700px;
-  height: 94vh;
+  height: 95vh;
   margin: 1vh auto 0;
   padding: 0 5px;
   overflow-y: auto;
@@ -103,7 +103,7 @@ option {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5vh 0.5vw;
+  padding: 1vh 0.5vw;
   border-bottom: 1px solid grey;
   font-size: clamp(1em, 2vw, 1.2em);
   cursor: pointer;

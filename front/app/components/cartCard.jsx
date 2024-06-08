@@ -21,7 +21,7 @@ export default function CartCard(props) {
   }
 
   function showCart() {
-    router.push(`/shop/cart/${props.id}/`)
+    router.push(`/shop/${props.id}/`)
   }
 
   return (

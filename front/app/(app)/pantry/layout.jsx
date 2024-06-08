@@ -1,13 +1,13 @@
 import { Inter } from 'next/font/google'
 import NavBar from '@comps/navbar'
 import ShoppingBar from '@comps/shoppingBar'
-import '../shop/page.css'
+import '@app/app.css'
 import Footer from '@comps/footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Listas - ShopZen',
+  title: 'Dispensa - ShopZen',
 }
 
 export default function RootLayout({ children }) {

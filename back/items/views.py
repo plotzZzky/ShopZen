@@ -35,11 +35,9 @@ class CartView(ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-    @action(detail=False, methods=['POST'])
-    def all(self, request, *args, **kwargs):
-        market = request.data.get("market", "Mercado")
+    def list(self, request, *args, **kwargs):
         user = request.user
-        query = Cart.objects.filter(market=market, user=user)
+        query = Cart.objects.filter(user=user)
         serializer = CartSerializer(query, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -81,12 +79,12 @@ class ItemCartView(ModelViewSet):
     serializer_class = CartItemSerializer
     queryset = []
 
-    @action(detail=False, methods=['POST'])
-    def all(self, request, *args, **kwargs):
-        cart_id = request.data['cartId']
+    def retrieve(self, request, *args, **kwargs):
+        cart_id = kwargs['pk']  # ID do cart
         cart = Cart.objects.get(pk=cart_id)
         query = CartItem.objects.filter(cart=cart)
         serializer = self.get_serializer(query, many=True)
+
         data = {"items": serializer.data, "name": cart.name}
         return Response(data, status=status.HTTP_200_OK)
 

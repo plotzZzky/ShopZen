@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useAuth } from "@comps/authContext";
 import ModalAdd from "@comps/modalAddItem";
 import ModalNewItem from "@comps/modalNewItem";
 import ShoppingBar from "@comps/shoppingBar";
@@ -8,7 +9,7 @@ import ShoppingCard from "@comps/shoppingCard";
 
 
 export default function Cart({ params }) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
   const [getShowModal, setShowModal] = useState(false)
@@ -24,32 +25,29 @@ export default function Cart({ params }) {
   }
 
   // Busca a listas com os produtos deste carrinho no back
-  function getCart(market = getMarket) {
-    let url = "http://127.0.0.1:8000/shop/item/all/";
-    const formData = new FormData();
-    formData.append("cartId", params.id)
+  function getCart() {
+    const url = `http://127.0.0.1:8000/shop/item/${params.id}/`;
 
     const data = {
-      method: 'POST',
+      method: 'GET',
       headers: { Authorization: 'Token ' + getToken },
-      body: formData
     };
     
     fetch(url, data)
       .then((res) => res.json())
       .then((data) => {
-        createShoppingCards(data['items']);
-        setCartName(data['name'])
+        createShoppingCards(data.items);
+        setCartName(data.name)
       });
   }
   
   function createShoppingCards(value) {
     if (value) {
-      setCards() // Usado para forçar a renderização da nova lista
       setCards(
         value.map((data, index) => (
-          <ShoppingCard key={index} name={data.item.name} amount={data.amount} cartId={data.cart} itemId={data.id} 
-           modelId={data.item.id} delete={() => removeShopCard(index)}>
+          <ShoppingCard 
+            key={index} name={data.item.name} amount={data.amount} cartId={data.cart} 
+            itemId={data.id} modelId={data.item.id} delete={() => removeShopCard(index)}>
           </ShoppingCard>
         ))
       );
@@ -78,13 +76,14 @@ export default function Cart({ params }) {
   return (
     <>
       <div className='page banner'>
-        <div className='align-cards'>
+        <div className='cards'>
           <ShoppingBar show_add={showModalAdd} show_new={showModalNew} market={setMarket} getCart={getCart} cartId={params.id}></ShoppingBar>
-          <a className="page-title"> {getCartName} </a>
+          <a className="page-title">{getCartName} </a>
           {getCards}
         </div>
         
         <ModalAdd getCart={getCart} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAdd>
+
         <ModalNewItem setShow={setShowModal} market={getMarket}></ModalNewItem>
       </div>
     </>

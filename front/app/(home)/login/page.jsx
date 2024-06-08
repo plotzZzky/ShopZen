@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@comps/authContext';
 import InputPwd from '@comps/inputs/inputPwd';
 import InputEmail from '@comps/inputs/inputEmail';
 import InputUser from '@comps/inputs/inputUser';
@@ -10,7 +11,7 @@ import InputQuestion from '@comps/inputs/inputQuestion';
 
 export default function Login() {
   const [getLogin, setLogin] = useState(true);
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const router = useRouter();
 
   const [getUsername, setUsername] = useState("");
