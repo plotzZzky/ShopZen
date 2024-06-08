@@ -11,16 +11,21 @@ nav {
 .navbar-align {
   display: flex;
   margin: 0;
-  justify-content: right;
+  justify-content: space-between;
 }
 
 .menu {
   display: flex;
 }
 
+.nav-div {
+  flex: 0 1 33.3%;
+  display: flex;
+}
+
 .menu-item {
-  padding: 1.2vh 1vw;
-  margin: 0 1vw;
+  padding: 1.2vh 0.5vw;
+  margin: 0 0.5vw;
   text-align: center;
   cursor: pointer;
   position: relative;

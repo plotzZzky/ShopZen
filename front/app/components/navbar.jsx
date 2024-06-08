@@ -6,7 +6,7 @@ import { faUser, faBars, faHome, faQuestion, faUsers, faRightFromBracket, faCart
 import './navbar.css'
 
 
-export default function NavBar() {
+export default function NavBar(props) {
   const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
 
   const router = useRouter();
@@ -138,8 +138,7 @@ export default function NavBar() {
   return (
     <nav>
       <div className='navbar-align'>
-        <div className="menu" id="menu">
-
+        <div className="menu nav-div" id="menu">
           <a className="menu-icon" onClick={openResponsiveMenu}>
             <FontAwesomeIcon icon={faBars} />
           </a>
@@ -156,8 +155,14 @@ export default function NavBar() {
 
           {Pantry()}
 
-          {LOGIN()}
+        </div>
 
+        <div className='nav-div'>
+          {props.appbar()}
+        </div>
+
+        <div className="nav-div" style={{justifyContent: 'flex-end'}}>
+          {LOGIN()}
         </div>
       </div>
     </nav>

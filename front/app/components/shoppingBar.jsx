@@ -41,12 +41,21 @@ export default function ShoppingBar(props) {
       })
   }
 
+  function showModalAdd() {
+    document.getElementById('ModalAdd').style.display = 'block'
+    setShowModal(true)
+  }
+
+  function showModalNew() {
+    document.getElementById('ModalNew').style.display = 'block'
+  }
+
   return (
     <div className="app-bar">
       <div className='app-bar-align'>
-        <button className='app-btn' onClick={props.show_new}><FontAwesomeIcon icon={faPlus} className='icon-menu' /></button>
-        <button className='app-btn' onClick={props.show_add}><FontAwesomeIcon icon={faCartPlus} className='icon-menu' /></button>
-        <button className='app-btn' onClick={buyList}><FontAwesomeIcon icon={faCartShopping} className='icon-menu' /></button>
+        <button className='app-btn' onClick={showModalNew}><FontAwesomeIcon icon={faPlus}/></button>
+        <button className='app-btn' onClick={showModalAdd}><FontAwesomeIcon icon={faCartPlus}/></button>
+        <button className='app-btn' onClick={buyList}><FontAwesomeIcon icon={faCartShopping}/></button>
 
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>
       </div>

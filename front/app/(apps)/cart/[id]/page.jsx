@@ -77,7 +77,6 @@ export default function Cart({ params }) {
     <>
       <div className='page banner'>
         <div className='cards'>
-          <ShoppingBar show_add={showModalAdd} show_new={showModalNew} market={setMarket} getCart={getCart} cartId={params.id}></ShoppingBar>
           <a className="page-title">{getCartName} </a>
           {getCards}
         </div>

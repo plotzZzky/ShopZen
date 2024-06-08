@@ -1,11 +1,12 @@
-import { useState } from 'react';
+'use client'
+import { useAuth } from './authContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import './navbar.css'
 
 
-export default function CartBar(props) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+export default function CartBar() {
+  const [getToken, setToken] = useAuth();
 
   // filter cards in list by name
   function filterItems(event) {
@@ -29,9 +30,8 @@ export default function CartBar(props) {
   return (
     <div className="app-bar">
       <div className='app-bar-align'>
-          <button className='app-btn' onClick={showModalNew}><FontAwesomeIcon icon={faCartPlus} className='icon-menu' /></button>
+          <button className='app-btn' onClick={showModalNew}><FontAwesomeIcon icon={faCartPlus} /></button>
           <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>
-
       </div>
     </div>
   )

@@ -61,11 +61,10 @@ export default function Shop() {
     <>
       <div className='page banner'>
         <div className='cards'>
-          <CartBar market={setMarket} getCart={getAllCarts}></CartBar>
           <a className="page-title"> Suas listas de compras </a>
           {getCards}
         </div>
-        
+
         <ModalNewCart getAllCarts={getAllCarts} ></ModalNewCart>
       </div>
     </>

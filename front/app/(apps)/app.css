@@ -1,10 +1,12 @@
 /* App */
 .app-bar {
-  margin: 0 -5px;
-  padding: 5px 0;
+  width: 100%;
+  margin: 0;
+  padding: 0 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 990;
-  backdrop-filter: blur(4px);
-  background-color: var(--color_accent);
 }
 
 .app-bar-align {
@@ -25,7 +27,7 @@
 }
 
 .app-btn * {
-  color: var(--fontColor_sec);
+  color: var(--color_accent);
   font-size: clamp(1em, 2vw, 1.3em);
 }
 
@@ -38,7 +40,7 @@
   transform: scaleX(0);
   transition: all 0.2s ease-in-out;
   z-index: -1;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--color_accent);
   border-radius: 0;
   background-color: transparent;
 }
@@ -46,12 +48,6 @@
 .app-btn:hover::before {
   transform-origin: center;
   transform: scaleX(1);
-}
-
-.app-btn:hover,
-.app-btn:hover * {
-  transition: 300ms ease-in-out;
-  color: var(--fontColor_sec);
 }
 
 .app-select {
@@ -76,7 +72,8 @@ option {
   padding: 0.4vh 4px;
   font-size: clamp(0.8em, 1.5vw, 1em);
   color: var(--fontColor_pri);
-  border: none;
+  border: 2px solid var(--color_accent);
+  border-radius: 4px;
 }
 
 /* Cards */
