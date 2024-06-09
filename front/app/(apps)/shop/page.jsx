@@ -2,15 +2,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@comps/authContext";
-import CartBar from "@comps/cartBar";
-import CartCard from "@comps/cartCard";
-import ModalNewCart from "@comps/modalNewCart";
+import CartCard from "@/app/components/cart/cartCard";
+import ModalNewCart from "@/app/components/cart/modalNewCart";
 
 
 export default function Shop() {
   const [getToken, setToken] = useAuth();
   const [getCards, setCards] = useState([]);
-  const [getMarket, setMarket] = useState("Mercado");
   const router = useRouter();
 
   function checkLogin() {

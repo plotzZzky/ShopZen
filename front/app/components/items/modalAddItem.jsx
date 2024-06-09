@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ItemCard from "./ItemCard";
+import ItemCard from "../cart/ItemCard";
 
 
 export default function ModalAdd(props) {

@@ -2,10 +2,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@comps/authContext";
-import ModalAdd from "@comps/modalAddItem";
-import ModalNewItem from "@comps/modalNewItem";
-import ShoppingBar from "@comps/shoppingBar";
-import ShoppingCard from "@comps/shoppingCard";
+import ModalAdd from "@comps/items/modalAddItem";
+import ModalNewItem from "@comps/items/modalNewItem";
+import ShoppingCard from "@comps/shop/shoppingCard";
 
 
 export default function Cart({ params }) {

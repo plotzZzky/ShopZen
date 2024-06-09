@@ -1,11 +1,11 @@
 'use client'
-import { useAuth } from './authContext';
+import { useAuth } from '../authContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
-import './navbar.css'
+import '@comps/navbar.css'
 
 
-export default function CartBar() {
+export default function ShopBar() {
   const [getToken, setToken] = useAuth();
 
   // filter cards in list by name

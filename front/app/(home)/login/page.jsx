@@ -76,8 +76,8 @@ export default function Login() {
 
     .then((data) => {
       if (data.token) {
-        const items = JSON.stringify(data['items'])
-        sessionStorage.setItem("token", data.token)
+        const items = JSON.stringify(data.items)
+        setToken(data.token)
         sessionStorage.setItem("items", items)
         router.push('/shop')
 
@@ -117,8 +117,8 @@ export default function Login() {
       .then(res => res.json())
       .then((data) => {
         if (data.token) {
-          const items = JSON.stringify(data['items'])
-          sessionStorage.setItem("token", data.token)
+          const items = JSON.stringify(data.items)
+          setToken(data.token)
           sessionStorage.setItem("items", items)
           router.push('/shop')
 

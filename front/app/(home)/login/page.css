@@ -48,7 +48,7 @@
 .div-input {
   width: calc(100% - 5vw);
   margin: 1vh 2vw 0;
-  background-color: #f3f0f0;
+  background-color: #e7e0e036;
   border: 2px solid var(--color_accent);
   position: relative;
   display: inline-flex;

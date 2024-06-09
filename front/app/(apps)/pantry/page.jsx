@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@comps/authContext';
-import PantryBar from '@comps/pantryBar';
-import PantryCard from '@comps/pantryCard';
+import PantryCard from '@/app/components/pantry/pantryCard';
 
 
 export default function Pantry() {
@@ -64,7 +63,6 @@ export default function Pantry() {
     <>
       <div className='page banner'>
         <div className='cards'>
-          <PantryBar market={setMarket} getItems={getPantryItems}></PantryBar>
           <a className="page-title"> Sua dispensa </a>
           {getCards}
         </div>

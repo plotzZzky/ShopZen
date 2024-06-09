@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
-import './navbar.css'
+import '@comps/navbar.css'
 
 
-export default function ShoppingBar(props) {
+export default function CarBar(props) {
   const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
 
   // Filtra os cards pelo nome

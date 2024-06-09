@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import NavBar from '@comps/navbar'
-import CartBar from '@comps/cartBar'
+import ShopBar from '@comps/shop/shopBar'
 import Footer from '@comps/footer'
 import '@app/app.css'
 
@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <section>
       <header>
-        <NavBar appbar={ShoppingBar}></NavBar>
+        <NavBar appbar={ShopBar}></NavBar>
       </header>
 
       <main>

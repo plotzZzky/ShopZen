@@ -18,11 +18,11 @@
   padding: 0.3vh 0.8vw;
   font-size: clamp(0.9em, 2vw, 1.1em);
   font-weight: bold;
+  color: var(--color_accent);
   cursor: pointer;
   position: relative;
   z-index: 1;
-  background-color: transparent;
-  border: none;
+  border: 1px solid orange;
   border-radius: 0;
 }
 
@@ -200,7 +200,6 @@ option {
   padding: 5px 5vw;
   justify-content: center;
   gap: 2vw;
-  background-color: var(--color_accent);
 }
 
 /* Pantry */

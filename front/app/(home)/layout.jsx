@@ -9,6 +9,7 @@ export const metadata = {
   title: 'Início - ShopZen ',
 }
 
+
 export default function RootLayout({ children }) {
   return (
     <section>

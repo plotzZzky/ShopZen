@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useAuth } from "../authContext";
 
 
 export default function ModalNewItem(props) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const [getName, setName] = useState("");
   const [getValidate, setValidate] = useState("");
 

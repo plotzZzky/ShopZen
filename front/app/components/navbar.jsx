@@ -73,6 +73,14 @@ export default function NavBar(props) {
     ) : null
   }
 
+  const APPBAR = () => {
+    return props.appbar?(
+      <div className="nav-div">
+        {props.appbar?.()}
+      </div>
+    ) : null
+  }
+
   //Funções de navegação pelas paginas
   function goHome() {
     if (getPath === '/') {
@@ -93,8 +101,8 @@ export default function NavBar(props) {
     closeResponsiveMenu();
   }
 
-  //Função generica para redirecionamento, se tokne for null redireciona para /login do contrario para a pagina passada como parametro
   function genericGoTo(value) {
+    //Função generica para redirecionamento, se tokne for null redireciona para /login do contrario para a pagina passada como parametro
     if (getToken !== null && typeof getToken === 'string') {
       if (getPath !== value) {
         router.push(value);
@@ -157,9 +165,7 @@ export default function NavBar(props) {
 
         </div>
 
-        <div className='nav-div'>
-          {props.appbar()}
-        </div>
+          {APPBAR()}
 
         <div className="nav-div" style={{justifyContent: 'flex-end'}}>
           {LOGIN()}
