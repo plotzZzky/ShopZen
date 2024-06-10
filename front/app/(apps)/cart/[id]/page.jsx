@@ -2,6 +2,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@comps/authContext";
+import NavBar from "@comps/navbar";
+import CartBar from "@comps/cart/cartBar";
 import ModalAdd from "@comps/items/modalAddItem";
 import ModalNewItem from "@comps/items/modalNewItem";
 import ShoppingCard from "@comps/shop/shoppingCard";
@@ -59,13 +61,8 @@ export default function Cart({ params }) {
     );
   }
 
-  function showModalAdd() {
-    document.getElementById('ModalAdd').style.display = 'block'
-    setShowModal(true)
-  }
-
-  function showModalNew() {
-    document.getElementById('ModalNew').style.display = 'block'
+  const APPBAR = () => {
+    return <CartBar getCart={getCart}></CartBar>
   }
 
   useEffect(() => {
@@ -74,6 +71,8 @@ export default function Cart({ params }) {
 
   return (
     <>
+      <NavBar appbar={APPBAR}></NavBar>
+
       <div className='page banner'>
         <div className='cards'>
           <a className="page-title">{getCartName} </a>

@@ -12,6 +12,7 @@ export default function ModalAdd(props) {
   }
 
   function createCards() {
+    // Cria os cards com os items models
     const items = JSON.parse(sessionStorage.getItem("items"))
     const market = props.market
     const filtered = items.filter(item => item.market === market);
@@ -23,6 +24,7 @@ export default function ModalAdd(props) {
   }
 
   function filterNewItems(event) {
+    // Filtra os items models
     const value = event.target.value.toLowerCase();
     const items = document.getElementsByClassName("card-new");
     

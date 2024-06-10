@@ -23,20 +23,12 @@ export default function ModalNewItem(props) {
     };
   
     fetch(url, data)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Erro ao criar novo item. Status: ${res.status}`);
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         const items = JSON.stringify(data);
         sessionStorage.setItem("items", items);
         closeModal();
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+    })
   }
   
   function changeName(event) {

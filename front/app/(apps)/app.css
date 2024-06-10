@@ -122,6 +122,10 @@ option {
   font-size: clamp(0.8em, 1.5vw, 1em);
 }
 
+.card-market {
+  visibility: hidden;
+}
+
 .card-amount {
   width: 48px;
   color: var(--fontColor_pri);

@@ -1,9 +1,11 @@
 'use client'
-export default function PantryBar(props) {
+
+
+export default function PantryBar() {
 
   function filterItems(event) {
     const value = event.target.value.toLowerCase()
-    const items = document.getElementsByClassName("item-card");
+    const items = document.getElementsByClassName("card");
     Array.from(items).forEach(item => {
       const name = item.querySelector(".card-name").innerHTML.toLowerCase();
 
@@ -17,8 +19,16 @@ export default function PantryBar(props) {
 
   function changeMarket(event) {
     const value = event.target.value
-    props.getItems(value)
-    props.market(value)
+    const items = document.getElementsByClassName("card");
+    Array.from(items).forEach(item => {
+      const name = item.querySelector(".card-market").innerHTML
+
+      if (name.includes(value)) {
+        item.style.display = "flex";
+      } else {
+        item.style.display = "none";
+      }
+    });
   }
 
   return (

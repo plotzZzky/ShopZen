@@ -1,15 +1,17 @@
 'use client'
-import { useState } from 'react';
+import { useAuth } from '../authContext';
+import { useParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@comps/navbar.css'
 
 
-export default function CarBar(props) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+export default function CartBar(props) {
+  const [getToken, setToken] = useAuth();
+  const urlParams = useParams();
 
-  // Filtra os cards pelo nome
   function filterItems(event) {
+    // Filtra os cards pelo nome
     const value = event.target.value.toLowerCase()
     const items = document.getElementsByClassName("card");
     Array.from(items).forEach(item => {
@@ -23,10 +25,10 @@ export default function CarBar(props) {
     });
   }
 
-  // Adiciona os items da lista a dispensa e remove do carrinho
   function buyList() {
+    // Adiciona os items da lista a dispensa e remove do carrinho
     const formData = new FormData();
-    formData.append("cartId", props.cartId)
+    formData.append("cartId", urlParams.id)
 
     const url = "http://127.0.0.1:8000/shop/cart/buy/"
     const data = {
@@ -43,7 +45,6 @@ export default function CarBar(props) {
 
   function showModalAdd() {
     document.getElementById('ModalAdd').style.display = 'block'
-    setShowModal(true)
   }
 
   function showModalNew() {

@@ -61,7 +61,8 @@ export default function PantryCard(props) {
 
   return (
     <div className='card'>
-      <a className='card-name'> {props.data.item.name} </a>
+      <a className='card-name'>{props.data.item.name}</a>
+      <a className='card-market'>{props.data.item.market}</a>
       <div className='pantry-align-btn'>
         {ALERT()}
         <input className='card-date' type='date' value={getDate} onChange={changeDate}></input>

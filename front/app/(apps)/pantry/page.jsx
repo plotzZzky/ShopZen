@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@comps/authContext';
+import NavBar from '@comps/navbar'
+import PantryBar from '@comps/pantry/pantryBar'
 import PantryCard from '@/app/components/pantry/pantryCard';
 
 
@@ -55,12 +57,18 @@ export default function Pantry() {
     );
   }
 
+  const APPBAR = () => {
+    return <PantryBar></PantryBar>
+  }
+
   useEffect(() => {
     checkLogin()
   }, [])
 
   return (
     <>
+      <NavBar appbar={APPBAR}></NavBar>
+
       <div className='page banner'>
         <div className='cards'>
           <a className="page-title"> Sua dispensa </a>
