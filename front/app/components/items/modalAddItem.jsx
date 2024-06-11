@@ -53,7 +53,7 @@ export default function ModalAdd(props) {
         </div>
 
         <div className="modal-btns">
-          <button className='app-btn' onClick={closeModal}> Fechar </button>
+          <button className='btn-mini' onClick={closeModal}> Fechar </button>
         </div>
       </div>
     </div>

@@ -16,11 +16,14 @@ nav {
 
 .menu {
   display: flex;
+  flex: 0 1 100%;
+  height: auto;
 }
 
 .nav-div {
-  flex: 0 1 100%;
   display: flex;
+  flex: 0 1 100%;
+  height: 5vh;
 }
 
 .menu-item {
@@ -29,12 +32,12 @@ nav {
   text-align: center;
   cursor: pointer;
   position: relative;
-  font-weight: bold;
-  font-size: clamp(0.7em, 1vw, 1em);
 }
 
 .menu-item * {
   color: var(--color_accent);
+  font-weight: bold;
+  font-size: clamp(0.8em, 2vw, 1em);
 }
 
 .menu-item::before {
@@ -59,14 +62,15 @@ nav {
 .menu-icon {
   display: none;
   width: 26px;
-  height: 24px;
-  padding: 10px 4px 4px;
+  height: 20px;
+  margin: 0.8vh 0 0;
+  padding: 6px 4px 2px;
   position: relative;
   cursor: pointer;
 }
 
 .menu-icon * {
-  color: var(--fontColor_sec);
+  color: var(--color_accent);
 }
 
 .menu-icon::before {
@@ -103,7 +107,7 @@ nav {
 }
 
 .app-btn {
-  padding: 0.3vh 0.5vw;
+  padding: 0.5vh 0.5vw;
   font-size: clamp(0.9em, 2vw, 1.1em);
   font-weight: bold;
   cursor: pointer;
@@ -116,26 +120,29 @@ nav {
 
 .app-btn * {
   color: var(--color_accent);
-  font-size: clamp(1em, 2vw, 1.3em);
+  font-size: clamp(1.2em, 2vw, 1.3em);
 }
 
 .app-btn::before {
   content: '';
   position: absolute;
-  inset: 0;
-  padding: 0.3vh 0.5vw;
+  inset: -0.7vh;
+  padding: 0.5vh 0.5vw;
   transform-origin: center;
-  transform: scaleX(0);
+  transform: scaleY(1.1);
   transition: all 0.2s ease-in-out;
   z-index: -1;
-  border-bottom: 2px solid var(--color_accent);
+  opacity: 0;
+  border-top: 2px solid var(--color_accent);
+  border-bottom: 3px solid var(--color_accent);
   border-radius: 0;
   background-color: transparent;
 }
 
 .app-btn:hover::before {
   transform-origin: center;
-  transform: scaleX(1);
+  transform: scaleY(1);
+  opacity: 0.8;
 }
 
 .app-select {
@@ -144,18 +151,19 @@ nav {
   font-size: clamp(0.8em, 1.6vw, 1em);
   background-color: white;
   color: var(--fontColor_pri);
-  border: none;
-  border-radius: 0;
+  border: 2px solid var(--color_accent);
+  border-radius: 4px;
 }
 
 option {
   color: var(--fontColor_pri);
   font-weight: bold;
   font-size: clamp(0.8em, 1.6vw, 1em);
+  border: none;
 }
 
 .app-filter {
-  width: 40vw;
+  width: 30vw;
   max-width: 240px;
   padding: 0.4vh 4px;
   font-size: clamp(0.8em, 1.5vw, 1em);

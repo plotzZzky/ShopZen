@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useAuth } from './authContext'
 import { useRouter, usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faHome, faQuestion, faUsers, faRightFromBracket, faCartShopping } from '@fortawesome/free-solid-svg-icons'
@@ -7,14 +8,14 @@ import './navbar.css'
 
 
 export default function NavBar(props) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
 
   const router = useRouter();
   const getPath = usePathname();
 
   // Função que abre o menu no modo responsivo
   function openResponsiveMenu() {
-    let navbar = document.getElementsByClassName("menu")[0];
+    const navbar = document.getElementById("menu")
     if (navbar.className == "menu") {
       navbar.classList.add("responsive");
     } else {
@@ -24,7 +25,7 @@ export default function NavBar(props) {
 
   // Função que fecha o menu no modo responsivo
   function closeResponsiveMenu() {
-    let navbar = document.getElementsByClassName("menu")[0];
+    const navbar = document.getElementById('menu')
     navbar.classList.remove("responsive");
   };
 
@@ -32,7 +33,7 @@ export default function NavBar(props) {
   const ABOUT = () => {
     return getPath === '/' ? (
       <div className="menu-item" onClick={goAbout}>
-        <a><FontAwesomeIcon icon={faUsers} className='icon-menu' /> Sobre </a>
+        <span><FontAwesomeIcon icon={faUsers}/> Sobre </span>
       </div>
     ) : null
   };
@@ -40,7 +41,7 @@ export default function NavBar(props) {
   const FAQ = () => {
     return getPath === '/' ? (
       <div className="menu-item" onClick={goFaq}>
-        <a><FontAwesomeIcon icon={faQuestion} className='icon-menu' /> Dúvidas </a>
+        <span><FontAwesomeIcon icon={faQuestion}/> Dúvidas </span>
       </div>
     ) : null
   };
@@ -48,11 +49,11 @@ export default function NavBar(props) {
   const LOGIN = () => {
     return getToken === null? (
       <div className="menu-item" onClick={goLogin}>
-        <a><FontAwesomeIcon icon={faUser} className='icon-menu' /> Entrar </a>
+        <span><FontAwesomeIcon icon={faUser}/> Entrar </span>
       </div>
     ) : (
       <div className="menu-item" onClick={goLogin}>
-        <a><FontAwesomeIcon icon={faRightFromBracket} className='icon-menu' /> Sair </a>
+        <span><FontAwesomeIcon icon={faRightFromBracket}/> Sair </span>
       </div>
     )
   };
@@ -60,7 +61,7 @@ export default function NavBar(props) {
   const Shopping = () => {
     return getToken !== null? (
       <div className="menu-item" onClick={goShopping}>
-        <a><FontAwesomeIcon icon={faCartShopping} className='icon-menu' /> Compras </a>
+        <span><FontAwesomeIcon icon={faCartShopping}/> Compras </span>
       </div>
     ) : null
   }
@@ -68,7 +69,7 @@ export default function NavBar(props) {
   const Pantry = () => {
     return getToken !== null? (
       <div className="menu-item" onClick={goPantry}>
-        <a><FontAwesomeIcon icon={faUser} className='icon-menu' /> Dispensa </a>
+        <span><FontAwesomeIcon icon={faUser}/> Dispensa </span>
       </div>
     ) : null
   }
@@ -146,13 +147,11 @@ export default function NavBar(props) {
   return (
     <nav>
       <div className='navbar-align'>
-        <div className="menu nav-div" id="menu">
-          <a className="menu-icon" onClick={openResponsiveMenu}>
-            <FontAwesomeIcon icon={faBars} />
-          </a>
+        <div className="menu" id="menu">
+          <FontAwesomeIcon icon={faBars} className="menu-icon" onClick={openResponsiveMenu}/>
 
           <div className="menu-item" onClick={goHome}>
-            <a><FontAwesomeIcon icon={faHome} /> Inicio </a>
+            <span><FontAwesomeIcon icon={faHome} /> Inicio </span>
           </div>
 
           {ABOUT()}
@@ -165,7 +164,7 @@ export default function NavBar(props) {
 
         </div>
 
-          {APPBAR()}
+        {APPBAR()}
 
         <div className="nav-div" style={{justifyContent: 'flex-end'}}>
           {LOGIN()}

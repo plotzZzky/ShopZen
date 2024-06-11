@@ -5,7 +5,7 @@ export default function PantryBar() {
 
   function filterItems(event) {
     const value = event.target.value.toLowerCase()
-    const items = document.getElementsByClassName("card");
+    const items = document.getElementsByClassName("item-card");
     Array.from(items).forEach(item => {
       const name = item.querySelector(".card-name").innerHTML.toLowerCase();
 

@@ -32,8 +32,6 @@ export default function ModalNewCart(props) {
       })
   }
 
-
-
   function changeName(event) {
     const value = event.target.value
     setName(value)
@@ -55,8 +53,8 @@ export default function ModalNewCart(props) {
           </div>
 
           <div className="modal-btns">
-            <button className='app-btn' onClick={createNewCart}> Criar </button>
-            <button className='app-btn' onClick={closeModal}> Fechar </button>
+            <button className='btn-mini' onClick={createNewCart}> Criar </button>
+            <button className='btn-mini' onClick={closeModal}> Fechar </button>
           </div>
         </div>
       </div>

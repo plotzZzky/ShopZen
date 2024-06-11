@@ -1,81 +1,3 @@
-/* App */
-.app-bar {
-  width: 100%;
-  margin: 0;
-  padding: 0 1vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 990;
-}
-
-.app-bar-align {
-  display: inline-flex;
-  gap: 0 clamp(5px, 0.5vw, 10px);
-}
-
-.app-btn {
-  padding: 0.3vh 0.8vw;
-  font-size: clamp(0.9em, 2vw, 1.1em);
-  font-weight: bold;
-  color: var(--color_accent);
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  border: 1px solid orange;
-  border-radius: 0;
-}
-
-.app-btn * {
-  color: var(--color_accent);
-  font-size: clamp(1em, 2vw, 1.3em);
-}
-
-.app-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 0.3vh 0.5vw;
-  transform-origin: center;
-  transform: scaleX(0);
-  transition: all 0.2s ease-in-out;
-  z-index: -1;
-  border-bottom: 2px solid var(--color_accent);
-  border-radius: 0;
-  background-color: transparent;
-}
-
-.app-btn:hover::before {
-  transform-origin: center;
-  transform: scaleX(1);
-}
-
-.app-select {
-  padding: 0.4vh 0.5vw;
-  font-weight: bold;
-  font-size: clamp(0.8em, 1.6vw, 1em);
-  background-color: white;
-  color: var(--fontColor_pri);
-  border: none;
-  border-radius: 0;
-}
-
-option {
-  color: var(--fontColor_pri);
-  font-weight: bold;
-  font-size: clamp(0.8em, 1.6vw, 1em);
-}
-
-.app-filter {
-  width: 60vw;
-  max-width: 320px;
-  padding: 0.4vh 4px;
-  font-size: clamp(0.8em, 1.5vw, 1em);
-  color: var(--fontColor_pri);
-  border: 2px solid var(--color_accent);
-  border-radius: 4px;
-}
-
 /* Cards */
 .cards {
   display: flex;
@@ -100,7 +22,7 @@ option {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1vh 0.5vw;
+  padding: 0.5vh 0.5vw;
   border-bottom: 1px solid grey;
   font-size: clamp(1em, 2vw, 1.2em);
   cursor: pointer;
@@ -119,7 +41,7 @@ option {
 .card-name {
   color: var(--fontColor_pri);
   font-weight: bold;
-  font-size: clamp(0.8em, 1.5vw, 1em);
+  font-size: clamp(0.8em, 1vw, 1em);
 }
 
 .card-market {
