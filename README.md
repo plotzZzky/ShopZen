@@ -3,11 +3,9 @@
 
 <h3> Projeto de plataforma para gerenciar listas de compras e dispensa.  </h2>
 
-![shopzen_a](https://github.com/plotzZzky/ShopZen/assets/12895974/d0bc05d6-f9c4-47a5-b8c0-73b701258054)
-![shopzen_b](https://github.com/plotzZzky/ShopZen/assets/12895974/bca3a988-242a-449f-a290-2df8d624c5d7)
-![shopzen_c](https://github.com/plotzZzky/ShopZen/assets/12895974/909b82c5-ab0a-444d-b420-6778ecaeb6c4)
-![shopzen_d](https://github.com/plotzZzky/ShopZen/assets/12895974/8ea51d92-c873-4d38-8ba6-cf901ef1103f)
-
+![shopzen](https://github.com/plotzZzky/ShopZen/assets/12895974/2ff3b2d1-7b3f-4084-8a1d-bc55974be068)
+![shopzen_b](https://github.com/plotzZzky/ShopZen/assets/12895974/7c94dac3-983e-438f-95b4-5b81a4ccb9e1)
+![shopzen_c](https://github.com/plotzZzky/ShopZen/assets/12895974/d2a43523-caa0-498f-9b04-9b085efa72f7)
 
 ## Caracteristicas:
 - [x] Sistema de login e usuarios;
