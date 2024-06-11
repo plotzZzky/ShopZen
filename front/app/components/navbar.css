@@ -10,6 +10,7 @@ nav {
 
 .navbar-align {
   display: flex;
+  align-items: center;
   margin: 0;
   justify-content: space-between;
 }
@@ -22,12 +23,13 @@ nav {
 
 .nav-div {
   display: flex;
+  align-items: center;
   flex: 0 1 100%;
-  height: 5vh;
+  height: 4vh;
 }
 
 .menu-item {
-  padding: 1.2vh 0.5vw;
+  padding: 1vh 0.5vw;
   margin: 0 0.5vw;
   text-align: center;
   cursor: pointer;
@@ -126,7 +128,7 @@ nav {
 .app-btn::before {
   content: '';
   position: absolute;
-  inset: -0.7vh;
+  inset: -0.5vh;
   padding: 0.5vh 0.5vw;
   transform-origin: center;
   transform: scaleY(1.1);
@@ -170,6 +172,7 @@ option {
   color: var(--fontColor_pri);
   border: 2px solid var(--color_accent);
   border-radius: 4px;
+  vertical-align: baseline;
 }
 
 @media screen and (max-width: 1100px) {
