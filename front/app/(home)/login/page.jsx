@@ -39,6 +39,7 @@ export default function Login() {
   function showLogin() {
     const login = document.getElementById('loginTab');
     const signup = document.getElementById('signupTab');
+
     login.style.display = getLogin ? 'none' : 'flex'
     signup.style.display = getLogin ? 'flex' : 'none'
     setLogin(getLogin ? false : true)
@@ -49,8 +50,8 @@ export default function Login() {
     router.push('/login/recovery')
   }
 
-  // Verifica se os campos de login estão preenchidas com informções validas
   function checkIfLoginIsvalid() {
+    // Verifica se os campos de login estão preenchidas com informções validas
     if (Pwd1Valid && UserValid) {
       loginFunc()
     } else {
@@ -59,8 +60,8 @@ export default function Login() {
     }
   }
 
-  // Função para fazer login
   function loginFunc() {
+    // Função para fazer login
     const url = `http://127.0.0.1:8000/users/login/`
 
     const formData = new FormData();
@@ -88,8 +89,8 @@ export default function Login() {
     })
   }
 
-  // Verifica se os campos de cadastro estão preenchidas com informções validas
   function checkIfSignIsValid() {
+    // Verifica se os campos de cadastro estão preenchidas com informções validas
     if (UserValid && EmailValid && Pwd1Valid && Pwd2Valid && Pwd1Valid === Pwd2Valid) {
       SignUpFunc()
     } else {
@@ -99,6 +100,7 @@ export default function Login() {
   }
 
   function SignUpFunc() {
+    // Função para se registrar
     const url = `http://127.0.0.1:8000/users/register/`
 
     const formData = new FormData();
@@ -132,7 +134,6 @@ export default function Login() {
   useEffect(() => {
     checkLogin()
   }, [getToken]);
-
 
   return (
     <>

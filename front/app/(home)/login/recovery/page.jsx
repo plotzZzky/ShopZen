@@ -24,23 +24,23 @@ export default function Login() {
   const [Pwd2Valid, setPwd2Valid] = useState(false)
   const [AnswerValid, setAnswerValid] = useState(false)
 
-  // Redireciona para a pagina de login
+  
   function redirectToLogin() {
+    // Redireciona para a pagina de login
     router.push('/login');
   };
 
-  // Função para verificar se o usuario terminou de digitar o username e então buscar a question
   function receiveQuestionTimer (value) {
-    // Timer para buscar o username
-    let timerId;
+    // Função para verificar se o usuario terminou de digitar o username e então buscar a question
+    let timerId;  // Timer para buscar o username
     clearTimeout(timerId);
     timerId = setTimeout(() => {
       receiveQuestion(value);
     }, 500);
   }
 
-  // Função que busca a question do usuario para recuperar a senha
   function receiveQuestion(value) {
+    // Função que busca a question do usuario para recuperar a senha
     const url = 'http://127.0.0.1:8000/users/question/'
 
     const formData = new FormData();
@@ -60,8 +60,8 @@ export default function Login() {
     })
   };
 
-  // Função de login
   function recoveyFunc() {
+    // Função para alterar a senha
     const url = 'http://127.0.0.1:8000/users/recovery/'
 
     const formData = new FormData();

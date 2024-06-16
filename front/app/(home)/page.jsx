@@ -41,7 +41,7 @@ export default function Home() {
   ]
 
   const faqItems = () => {
-    // Cria os items do faq
+    // Cria os cards dos items da faq
     return FAQ.map((data, index) => (
       <details key={index}>
         <summary> {data.question} </summary>
@@ -50,19 +50,20 @@ export default function Home() {
     ))
   }
 
-  function goToLogin() {
-    if (getToken !== null && typeof getToken === 'string') {
-      router.push("/market");
-    } else {
-      router.push("/login");
-    }
-  }
-
   const BENEFITSCARDS = () => {
     // Cria os cards dos beneficios de usar a shopzen
     return BENEFITS.map((data) => (
       <p> {data} </p>
     ))
+  }
+
+  function goToLogin() {
+    // Função para redirecionar a pagina de login
+    if (getToken !== null && typeof getToken === 'string') {
+      router.push("/market");
+    } else {
+      router.push("/login");
+    }
   }
 
   return (

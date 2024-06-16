@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import { useAuth } from '../authContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function PantryCard(props) {
-  const [getToken, setToken] = useState(typeof window !== 'undefined' ? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const [getDate, setDate] = useState(props.data.date)
 
   const ALERT = () => {

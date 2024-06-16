@@ -9,8 +9,8 @@ export default function ModalNewItem(props) {
 
   // cria um no item model para compras
   function createNewItem() {
-    const formData = new FormData();
     const market = document.getElementById("selectNewMarket").value;
+    const formData = new FormData();
     formData.append("market", market);
     formData.append("name", getName);
     formData.append("validate", getValidate);
