@@ -32,45 +32,45 @@ export default function NavBar(props) {
   // Criam os item na navbar dependendo da pagina acessada
   const ABOUT = () => {
     return getPath === '/' ? (
-      <div className="menu-item" onClick={goAbout}>
-        <span><FontAwesomeIcon icon={faUsers}/> Sobre </span>
-      </div>
+      <span onClick={goAbout}>
+        <FontAwesomeIcon icon={faUsers}/> Sobre
+      </span>
     ) : null
   };
 
   const FAQ = () => {
     return getPath === '/' ? (
-      <div className="menu-item" onClick={goFaq}>
-        <span><FontAwesomeIcon icon={faQuestion}/> Dúvidas </span>
-      </div>
+      <span onClick={goFaq}>
+        <FontAwesomeIcon icon={faQuestion}/> Dúvidas
+      </span>
     ) : null
   };
 
   const LOGIN = () => {
     return getToken === null? (
-      <div className="menu-item" onClick={goLogin}>
-        <span><FontAwesomeIcon icon={faUser}/> Entrar </span>
-      </div>
+      <span onClick={goLogin}>
+        <FontAwesomeIcon icon={faUser}/> Entrar
+      </span>
     ) : (
-      <div className="menu-item" onClick={goLogin}>
-        <span><FontAwesomeIcon icon={faRightFromBracket}/> Sair </span>
-      </div>
+      <span onClick={goLogin}>
+        <FontAwesomeIcon icon={faRightFromBracket}/> Sair 
+      </span>
     )
   };
 
   const Shopping = () => {
     return getToken !== null? (
-      <div className="menu-item" onClick={goShopping}>
-        <span><FontAwesomeIcon icon={faCartShopping}/> Compras </span>
-      </div>
+      <span onClick={goShopping}>
+        <FontAwesomeIcon icon={faCartShopping}/> Compras
+      </span>
     ) : null
   }
 
   const Pantry = () => {
     return getToken !== null? (
-      <div className="menu-item" onClick={goPantry}>
-        <span><FontAwesomeIcon icon={faUser}/> Dispensa </span>
-      </div>
+      <span onClick={goPantry}>
+        <FontAwesomeIcon icon={faUser}/> Dispensa
+      </span>
     ) : null
   }
 
@@ -148,11 +148,13 @@ export default function NavBar(props) {
     <nav>
       <div className='navbar-align'>
         <div className="menu" id="menu">
-          <FontAwesomeIcon icon={faBars} className="menu-icon" onClick={openResponsiveMenu}/>
-
-          <div className="menu-item" onClick={goHome}>
-            <span><FontAwesomeIcon icon={faHome} /> Inicio </span>
-          </div>
+          <span id='menuBtn'>
+            <FontAwesomeIcon icon={faBars} className="menu-icon" onClick={openResponsiveMenu}/>
+          </span>
+          
+          <span onClick={goHome}>
+            <FontAwesomeIcon icon={faHome} /> Inicio
+          </span>
 
           {ABOUT()}
 
@@ -166,7 +168,7 @@ export default function NavBar(props) {
 
         {APPBAR()}
 
-        <div className="nav-div" style={{justifyContent: 'flex-end'}}>
+        <div style={{justifyContent: 'flex-end'}}>
           {LOGIN()}
         </div>
       </div>

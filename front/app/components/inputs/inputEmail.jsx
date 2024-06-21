@@ -20,6 +20,12 @@ export default function InputEmail(props) {
     props.email(value)
   }
 
+  const ICON = () => {
+    return props.valid ?
+    <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
+    <FontAwesomeIcon icon={faX} className='icon-input' />
+  }
+
   useEffect(() => {
     const fakeEvent = { target: { value: props.value || '' } };
     validateEmail(fakeEvent)
@@ -33,10 +39,7 @@ export default function InputEmail(props) {
         onChange={validateEmail} onFocus={updateTipLoginPassword} value={props.value} >
       </input>
       <span className='input-div-icon'>
-        {props.valid ?
-          <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
-          <FontAwesomeIcon icon={faX} className='icon-input' />
-        }
+        {ICON()}
       </span>
     </div>
   )

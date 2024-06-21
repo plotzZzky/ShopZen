@@ -19,6 +19,12 @@ export default function InputQuestion(props) {
     }
     props.question(value)
   }
+  
+  const ICON = () => {
+    return props.valid ?
+    <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
+    <FontAwesomeIcon icon={faX} className='icon-input' />
+  }
 
   useEffect(() => {
     const fakeEvent = { target: { value: props.value || '' } };
@@ -31,10 +37,7 @@ export default function InputQuestion(props) {
         onChange={ValidQuestion} onFocus={updateLoginTip} value={props.value}>
       </input>
       <span className='input-div-icon'> 
-        {props.valid ?
-          <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
-          <FontAwesomeIcon icon={faX} className='icon-input' />
-        }
+        {ICON()}
       </span>
     </div>
   )

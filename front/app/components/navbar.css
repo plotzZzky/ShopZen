@@ -21,75 +21,49 @@ nav {
   height: auto;
 }
 
-.nav-div {
+nav div {
   display: flex;
   align-items: center;
   flex: 0 1 100%;
   height: 4vh;
 }
 
-.menu-item {
+nav span {
   padding: 1vh 0.5vw;
   margin: 0 0.5vw;
   text-align: center;
+  color: var(--color_accent);
+  font-weight: bold;
+  font-size: clamp(0.8em, 2vw, 1em);
   cursor: pointer;
   position: relative;
 }
 
-.menu-item * {
+nav span * {
   color: var(--color_accent);
-  font-weight: bold;
-  font-size: clamp(0.8em, 2vw, 1em);
 }
 
-.menu-item::before {
+nav span::before {
   content: '';
   position: absolute;
   inset: 0;
   transform-origin: left;
   transition: all .2s ease-in-out;
-  transform: scaleY(1.1);
+  transform: scaleY(.98);
   opacity: 0;
   z-index: -1;
   border-top: 2px solid var(--color_accent);
   border-bottom: 3px solid var(--color_accent);
 }
 
-.menu-item:hover::before {
+nav span:hover::before {
   transform-origin: left;
-  transform: scaleY(1);
+  transform: scaleY(.88);
   opacity: 0.8;
 }
 
-.menu-icon {
+#menuBtn {
   display: none;
-  width: 26px;
-  height: 20px;
-  margin: 0.8vh 0 0;
-  padding: 6px 4px 2px;
-  position: relative;
-  cursor: pointer;
-}
-
-.menu-icon * {
-  color: var(--color_accent);
-}
-
-.menu-icon::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 4px 0;
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform .2s ease-in-out;
-  border-bottom: 2px solid var(--fontColor_sec);
-  background-color: var(--background);
-  z-index: -1;
-}
-
-.menu-icon:hover::before {
-  transform-origin: left;
-  transform: scaleX(1);
 }
 
 /* App */

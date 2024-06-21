@@ -19,6 +19,11 @@ export default function InputAnswer(props) {
     props.answer(value)
   }
 
+  const ICON = () => {
+    return props.valid ?
+    <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
+    <FontAwesomeIcon icon={faX} className='icon-input' />
+  }
 
   return (
     <div className='div-input'>
@@ -26,10 +31,7 @@ export default function InputAnswer(props) {
         onChange={ValidAnswer} onFocus={updateLoginTip} >
       </input>
       <span className='input-div-icon'>
-        {props.valid ?
-          <FontAwesomeIcon icon={faCheck} className='icon-input-validate' /> :
-          <FontAwesomeIcon icon={faX} className='icon-input' />
-        }
+        {ICON()}
       </span>
     </div>
   )
