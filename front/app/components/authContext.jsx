@@ -8,8 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState( typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('token') || null : null );
 
   const updateToken = (newToken) => {
-    setToken(newToken);
+    if (newToken === null) {
     sessionStorage.setItem('token', newToken);
+    } else {
+      sessionStorage.removeItem('token')
+    }
+    setToken(newToken);
   };
 
   return (
