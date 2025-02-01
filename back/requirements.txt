@@ -3,3 +3,7 @@ psycopg2-binary
 djangorestframework
 django-cors-headers
 pillow
+requests
+python-dotenv
+supabase
+better-profanity

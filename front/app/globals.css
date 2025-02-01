@@ -32,8 +32,7 @@ body {
 }
 
 /* content */
-.page,
-.page-home {
+section {
   margin: 0;
   padding: 3vh 2vw 1vh;
   min-height: 96vh;
@@ -41,7 +40,6 @@ body {
 }
 
 .page {
-  margin: 0;
   padding: 4vh 0 0;
   min-height: 96vh;
 }
@@ -50,7 +48,7 @@ body {
   font-size: clamp(1em, 1.5vw, 1.3em);
 }
 
-.banner {
+#Start {
   background: linear-gradient(to top,
       rgba(0, 0, 0, 0),
       rgba(184, 184, 184, 0.664)), url('../public/market.jpg');

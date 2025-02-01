@@ -1,36 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
-# Modelo do item base, usado para criar os item para compra e da dispensa
 class ItemModel(models.Model):
-    name = models.CharField(max_length=255)
-    market = models.CharField(max_length=255)
-    validate = models.PositiveIntegerField(default=1)
+    # Modelo do item base, usado para criar os items para compra e da dispensa
+    name = models.CharField(max_length=255, blank=False, null=False)
+    market = models.CharField(max_length=255, default="Mercado", blank=False, null=False)
+    validate = models.PositiveIntegerField(default=90, blank=False, null=False)
 
     objects = models.Manager()
 
+    def save(self, *args, **kwargs):
+        # Deixa o nome com a inicial maiuscula
+        self.name = self.name.capitalize()  # type:ignore
+        super(ItemModel, self).save(*args, **kwargs)
 
-class Cart(models.Model):
-    name = models.CharField(max_length=256)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    market = models.CharField()
-
-    objects = models.Manager()
-
-
-# Cart
-class CartItem(models.Model):
-    item = models.ForeignKey(ItemModel, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField(default=1)
-    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
-
-    objects = models.Manager()
+    def __str__(self):
+        value: str = f"{self.name} - {self.market}"
+        return value
 
 
 # Pantry
 class Pantry(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    owner = models.CharField(max_length=255, blank=True, null=True)
 
     objects = models.Manager()
 

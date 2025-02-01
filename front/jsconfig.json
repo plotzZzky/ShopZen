@@ -2,8 +2,11 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"],
-      "@comps/*": ["./app/components/*"],
-      "@app/*": ["./app/(site)/*"],
+      "@comps/*": ["./app/comps/*"],
+      "@shop/*": ["./app/comps/shop/*"],
+      "@items/*": ["./app/comps/items/*"],
+      "@pantry/*": ["./aap/comps/pantry/*"],
+      "@app/*": ["./app/*"],
     }
   }
 }

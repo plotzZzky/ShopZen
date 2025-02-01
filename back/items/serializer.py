@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import CartItem, Cart, PantryItem, ItemModel
+from .models import ItemModel, PantryItem
 
 
 class ItemModelSerializer(ModelSerializer):
@@ -9,21 +9,7 @@ class ItemModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CartSerializer(ModelSerializer):
-    class Meta:
-        model = Cart
-        fields = '__all__'
-
-
-class CartItemSerializer(ModelSerializer):
-    item = ItemModelSerializer()
-
-    class Meta:
-        model = CartItem
-        fields = '__all__'
-
-
-class PantryItemSerializer(ModelSerializer):
+class PantrySerializer(ModelSerializer):
     item = ItemModelSerializer()
 
     class Meta:
