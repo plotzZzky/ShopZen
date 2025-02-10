@@ -31,24 +31,44 @@ export const supaBase = createClient(
 );
 
 
-export const getUserJsonFromSupabase = () => {
-  // Retorna um json simplificado so usuario
+export const getUserProfile = () => {
+  // Retorna o json simplificado do usuario
   if (typeof window !== "undefined") {
-    const json = sessionStorage.getItem("sb-egqqafzoroczxeachtlo-auth-token");  // Recebe o token do sessionStorage
+    const userprofile = sessionStorage.getItem("shopzen-userprofile");
 
-    if (json) {
-      const parsedData = JSON.parse(json);  // Converte o str do sessionStorage em Json
+    if (!userprofile) {
+      const userprofile = createUserProfile();
+    };
+  
+    sessionStorage.removeItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME); // remove o token do supabase
+
+    return userprofile;
+  };
+};
+
+
+function createUserProfile() {
+  if (typeof window !== "undefined") {
+    const supabaseToken = sessionStorage.getItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME);  // Recebe o supabase token do sessionStorage
+
+    if (supabaseToken) {
+      const parsedData = JSON.parse(supabaseToken);  // Converte o str do sessionStorage em Json
       const base_token =  parsedData.user.id + parsedData.user.identities[0].identity_id;
 
+      // Gera o user token
       const crypto = require("crypto")
       const key = process.env.NEXT_PUBLIC_RANDOM_SECRET_KEY
       const hash = crypto.createHash('sha256').update(base_token + key).digest('hex');
-  
-      return {
+
+      const userprofile = {
         "id": parsedData.user.id,
         "jwt": parsedData.access_token,
         "token": hash,
       };
+
+      sessionStorage.setItem("shopzen-userprofile", userprofile);
+  
+      return userprofile;
     };
   };
 };

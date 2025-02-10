@@ -11,21 +11,22 @@ export default function Footer() {
     <footer id="footer">
       <span className="brand"> ShopZen <FontAwesomeIcon icon={faCartShopping} /> </span>
 
-      <div className="align-footer">
+      <div className='contacts'>
 
-        <div className="link" onClick={goToGitHub}>
-          <FontAwesomeIcon icon={faEnvelope} />
-          <a> contato@shopzen.com</a>
+        <div>
+          <a>Contato:</a>
+          <span>
+            <FontAwesomeIcon icon={faEnvelope}/> 
+            contato@shopzen.com
+          </span>
         </div>
 
-        <div className="link" onClick={goToGitHub}>
-          <FontAwesomeIcon icon={faEnvelope} />
-          <a> financeiro@shopzen.com</a>
-        </div>
-
-        <div className="link" onClick={goToGitHub}>
-          <FontAwesomeIcon icon={faGithub} />
-          <a> dev@shopzen.com </a>
+        <div>
+          <a>Desenvolvedor:</a>
+          <span>
+            <FontAwesomeIcon icon={faGithub}/> 
+            github.com/plotzzzky
+          </span>
         </div>
 
       </div>

@@ -16,13 +16,14 @@ class CartView(ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-    def list(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         """ Retorna a lista com todos os carts do usuario """
         try:
-            owner: str = request.data["owner"]
+            owner: str = kwargs["pk"]
             query = Cart.objects.filter(owner=owner)
+
             if not query:
-                # Cria alguns carts pro usuario
+                # Se não houver nenhum cria alguns carts pro usuario
                 Cart.objects.create(name="Compras de mercado", owner=owner, market="Mercado")
                 Cart.objects.create(name="Compras de farmácia", owner=owner, market="Farmácia")
                 Cart.objects.create(name="Compras de petshop", owner=owner, market="PetShop")
@@ -41,7 +42,7 @@ class CartView(ModelViewSet):
             if check_profanity(request):
                 return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
 
-            serializer = CartSerializer(request.data, many=False)
+            serializer = CartSerializer(data=request.data, many=False)
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -81,7 +82,7 @@ class CartView(ModelViewSet):
         except KeyError:
             return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def retrieve(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def update(self, request, *args, **kwargs):
@@ -115,7 +116,7 @@ class ItemCartView(ModelViewSet):
             if check_profanity(request):
                 return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
 
-            serializer = CartItemSerializer(request.data, many=True)
+            serializer = CartItemSerializer(data=request.data, many=True)
 
             if serializer.is_valid():
                 owner: str = request.data['owner']

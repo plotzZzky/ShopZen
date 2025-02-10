@@ -1,54 +1,56 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import { getUserJsonFromSupabase } from '@comps/supabase';
+import { getUserProfile } from '@comps/supabase';
 import NavBar from '@comps/navbar'
 import PantryBar from '@pantry/pantryBar'
 import PantryCard from '@pantry/pantryCard';
 
 
 export default function Pantry() {
-  const userProfile = getUserJsonFromSupabase();
-  const [getCards, setCards] = useState([]);
   const router = useRouter();
+  const userProfile = getUserProfile();
+  const didMount = useRef(false); // Controla a primeira renderização
+
+  const [getCards, setCards] = useState([]);
 
   useEffect(() => {
-    checkLogin()
-  }, []);
+    if (!didMount.current) {
+      didMount.current = true; // Marcar que o componente foi montado
+      return;
+    };
+
+  }, [userProfile.jwt]);
 
   function checkLogin() {
     if (!userProfile.jwt) {
       router.push("/login")
-    } else {
-      loadPantryItems();
-    };
+    }
+      
+    loadPantryItems();
   };
 
   function loadPantryItems() {
     const cachedPantry = sessionStorage.getItem("Pantry");
+
     if (cachedPantry) {
-      createPantryCards(cachedPantry)
+      createPantryCards(cachedPantry);
     } else {
-      getPantryItemsFromBackEnd()
-    }
+      getPantryItemsFromBackEnd();
+    };
   };
 
   function getPantryItemsFromBackEnd(market) {
     // Recebe a lista de items da dispensa do usuario
     if (userProfile.token) {
-      const url = "http://127.0.0.1:8000/shop/pantry/all/";
-      
-      if (!market) {
-        const market = document.getElementById("selectMarket").value;
-      };
-
-      const form = new FormData();
-      form.append("market", market)
-
+      const url = "http://127.0.0.1:8000/shop/pantry/";
+    
       const formData = {
-        method: 'POST',
-        body: form,
-        headers: { Authorization: 'Token ' + getToken },
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${userProfile.jwt}`,
+          Token: `Token ${userProfile.token}`
+        }
       };
 
       fetch(url, formData)
@@ -60,17 +62,19 @@ export default function Pantry() {
   };
 
   function createPantryCards(value) {
-    // Cria os cards dos items da dispensa recebidos do back
-    setCards(
-      value.map((data, index) => (
-        <PantryCard data={data} key={index} getItems={getPantryItemsFromBackEnd} delete={() => removePantryCard(index, data.id)}></PantryCard>
-      ))
-    );
+    // Cria os cards dos items da dispensa
+    if (value) {
+      setCards(
+        value.map((data, index) => (
+          <PantryCard data={data} key={index} getItems={getPantryItemsFromBackEnd} delete={() => removePantryCardFromList(index, data.id)}></PantryCard>
+        ))
+      );
 
-    sessionStorage.setItem("Pantry", value);
+      sessionStorage.setItem("Pantry", value);
+    };
   };
 
-  function removePantryCard(indexToRemove, itemID) {
+  function removePantryCardFromList(indexToRemove, itemID) {
     /**
      * Remove o pantryCard da lista
      * @param {integer} indexToRemove - index do card a ser removido
@@ -108,7 +112,7 @@ export default function Pantry() {
       },
     };
 
-    fetch(url, requestData)
+    fetch(url, requestData);
   };
 
   return (

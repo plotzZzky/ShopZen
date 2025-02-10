@@ -1,5 +1,5 @@
 'use client'
-import { getUserJsonFromSupabase } from './supabase'
+import { getUserProfile } from './supabase'
 import { useRouter, usePathname } from 'next/navigation'
 import { supaBase } from './supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +8,7 @@ import './navbar.css'
 
 
 export default function NavBar(props) {
-  const userProfile = getUserJsonFromSupabase();
+  const userProfile = getUserProfile();
   const router = useRouter();
   const getPath = usePathname();
 
@@ -73,7 +73,7 @@ export default function NavBar(props) {
   const APPBAR = () => {
     return props.appbar?(
       <div className="nav-div">
-        {props.appbar?.()}
+        {props.appbar}
       </div>
     ) : null
   }
@@ -106,7 +106,6 @@ export default function NavBar(props) {
       router.push(nextUrl);
     };
 
-    showLoginAlert();
     closeResponsiveMenu();
   };
 
@@ -119,23 +118,16 @@ export default function NavBar(props) {
   };
 
   const handleLogin = async () => {
-    const result = await supaBase.auth.signInWithOAuth({
+    await supaBase.auth.signInWithOAuth({
       provider: "google",
-      });
-  };
-
-  // Mostra o alerta de login
-  function showLoginAlert() {
-    const alert = document.getElementById('loginAlert');
-    alert.style.visibility = 'visible';
-    setTimeout(() => {
-      alert.style.visibility = 'hidden';
-    }, 2000);
+      redirectTo: "http://localhost:3000/shop"
+    });
   };
 
   return (
     <nav>
       <div className='navbar-align'>
+
         <div className="menu" id="menu">
           <span id='menuBtn'>
             <FontAwesomeIcon icon={faBars} className="menu-icon" onClick={openResponsiveMenu}/>

@@ -1,13 +1,13 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { getUserJsonFromSupabase } from '@comps/supabase';
+import { getUserProfile } from '@comps/supabase';
 import NavBar from '@comps/navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Home() {
-  const userProfile = getUserJsonFromSupabase();
+  const userProfile = getUserProfile();
   const router = useRouter();
 
   const FAQ = [
@@ -52,8 +52,8 @@ export default function Home() {
 
   const BENEFITSCARDS = () => {
     // Cria os cards dos beneficios de usar a shopzen
-    return BENEFITS.map((value) => (
-      <p> {value} </p>
+    return BENEFITS.map((value, index) => (
+      <p key={index}> {value} </p>
     ))
   };
 
@@ -75,7 +75,7 @@ export default function Home() {
         <h2 className='subtitle'> Simplifique sua vida com uma lista de compras online!</h2>
 
         <div className='home-align-btns'>
-          <button onClick={goToLogin}> Começar! </button>
+          <button className="btn-home" onClick={goToLogin}> Começar! </button>
         </div>
       </section>
 

@@ -1,6 +1,5 @@
 'use client'
 
-
 export default function PantryBar() {
 
   function filterItems(event) {

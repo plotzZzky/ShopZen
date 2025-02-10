@@ -5,7 +5,8 @@
       "@comps/*": ["./app/comps/*"],
       "@shop/*": ["./app/comps/shop/*"],
       "@items/*": ["./app/comps/items/*"],
-      "@pantry/*": ["./aap/comps/pantry/*"],
+      "@pantry/*": ["./app/comps/pantry/*"],
+      "@cart/*": ["./app/comps/cart/*"],
       "@app/*": ["./app/*"],
     }
   }

@@ -110,7 +110,8 @@
   border: 1px solid grey;
 }
 
-.modal-input {
+.modal input,
+.modal select {
   margin: 4px 0;
   padding: 4px 2px;
   font-size: clamp(0.9em, 2vw, 1.1em);

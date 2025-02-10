@@ -1,26 +1,60 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { getUserProfile } from "../supabase";
 import ItemCard from "../cart/ItemCard";
 
 
 export default function ModalAdd(props) {
+  const userProfile = getUserProfile();
+  const didMount = useRef(false); // Controla a primeira renderização
+
   const [getCardsNew, setCardsNew] = useState([]);
 
-  function closeModal() {
-    props.getCart();
-    document.getElementById("ModalAdd").style.display = 'none';
-    props.setShow(false);
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true; // Marcar que o componente foi montado
+      return;
+    };
+
+    loadItemsModel();
+  }, []);
+
+  async function loadItemsModel() {
+    const items = sessionStorage.getItem("items");
+
+    if (items) {
+      createCartItemCards(JSON.parse(items));
+    };
+
+    const url = "http://127.0.0.1:8000/item/"
+    const requestData = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userProfile.jwt}`,
+        Token: `Token ${userProfile.token}`
+      },
+    }
+
+    const response = await fetch(url, requestData);
+    if (response.ok) {
+      const data = await response.json()
+      createCartItemCards(data)
+      sessionStorage.setItem("items", JSON.stringify(data));
+    }
   };
 
-  function createCards() {
+  function createCartItemCards(items) {
     // Cria os cards com os items models
-    const items = JSON.parse(sessionStorage.getItem("items"))
-    const market = props.market
-    const filtered = items.filter(item => item.market === market);
-    setCardsNew(
-      filtered.map((data, index) => (
-        <ItemCard name={data.name} amount={data.amount} key={index} itemId={data.id} cartId={props.cartId}></ItemCard>
-      ))
-    );
+    const market = "Mercado" // props.market
+    
+    if (items) {
+      const filtered = items.filter(item => item.market === market);
+
+      setCardsNew(
+        filtered.map((data, index) => (
+          <ItemCard name={data.name} amount={data.amount} key={index} itemId={data.id} cartId={props.cartId}></ItemCard>
+        ))
+      );
+    }
   };
 
   function filterNewItems(event) {
@@ -38,9 +72,12 @@ export default function ModalAdd(props) {
     });
   };
 
-  useEffect(() => {
-    createCards()
-  }, [props.show]);
+  function closeModal() {
+    props.getCart();
+    document.getElementById("ModalAdd").style.display = 'none';
+    props.setShow(false);
+  };
+
 
   return (
     <div className='modal-background' id="ModalAdd" onClick={closeModal}>

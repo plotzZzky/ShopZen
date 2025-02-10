@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
 
-
 from system.authenticate import validate_supabase_token
 
 
@@ -14,8 +13,8 @@ class AuthenticateMiddleWare:
             header_jwt: str = request.headers.get("Authorization")
             jwt: str = header_jwt.split()[1]  # Seleciona apenas o jwt
 
-            header_toke: str = request.headers.get("Token")
-            token: str = header_toke.split()[1]
+            header_token: str = request.headers.get("Token")
+            token: str = header_token.split()[1]
 
             if validate_supabase_token(jwt, token):
                 response = self.get_response(request)

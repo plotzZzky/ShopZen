@@ -1,43 +1,63 @@
 import { useState } from "react";
-import { useAuth } from "../authContext";
+import { getUserProfile } from "../supabase";
 
 
-export default function ModalNewItem(props) {
-  const [getToken, setToken] = useAuth();
+export default function ModalNewItem() {
+  const userProfile = getUserProfile();
+
   const [getName, setName] = useState("");
   const [getValidate, setValidate] = useState("");
 
-  // cria um no item model para compras
   function createNewItem() {
+    // Cria um novo item model
     const market = document.getElementById("selectNewMarket").value;
+    const newItem = {"name": getName, "market": market, "validate": getValidate }
+
+    closeModal();
+    saveItemOnSessionStorage(newItem);
+    createItemOnBackEnd(market);
+  };
+
+  function createItemOnBackEnd(market) {
+    // cria um no itemmodel para compras
     const form = new FormData();
     form.append("market", market);
     form.append("name", getName);
     form.append("validate", getValidate);
   
-    const url = "http://127.0.0.1:8000/shop/new/";
+    const url = "http://127.0.0.1:8000/item/";
 
     const requestdata = {
       method: 'POST',
       body: form,
-      headers: { Authorization: 'Token ' + getToken }
+      headers: {
+        Authorization: `Bearer ${userProfile.jwt}`,
+        Token: `Token ${userProfile.token}`
+      }
     };
   
     fetch(url, requestdata)
-      .then((res) => res.json())
-      .then((data) => {
-        const items = JSON.stringify(data);
-        sessionStorage.setItem("items", items);
-        closeModal();
-    })
+  };
+
+  function saveItemOnSessionStorage(value) {
+    const items = sessionStorage.getItem("items");
+    let jsonItems = []
+    
+    if (items) {
+      jsonItems = JSON.parse(items);
+    };
+
+    jsonItems.push(value);
+    sessionStorage.setItem("items", JSON.stringify(jsonItems));
   };
   
-  function changeName(event) {
+// handling
+  function handlingName(event) {
     const value = event.target.value;
     setName(value);
   };
 
-  function changeValidate(event) {
+  function handlingValidate(event) {
     const value = event.target.value;
     setValidate(value);
   };
@@ -53,10 +73,10 @@ export default function ModalNewItem(props) {
         <a className="modal-title"> Criar novo item: </a>
 
         <div className="modal-align">
-          <input className="modal-input" type='text' value={getName} onChange={changeName} placeholder="Digite o nome do produto"></input>
-          <input className="modal-input" type='number' min={0} value={getValidate} onChange={changeValidate} placeholder="Digite a validade do produto"></input>
+          <input type='text' value={getName} onChange={handlingName} placeholder="Digite o nome do produto"></input>
+          <input type='number' min={0} value={getValidate} onChange={handlingValidate} placeholder="Digite a validade do produto"></input>
 
-          <select className="modal-input" id="selectNewMarket">
+          <select id="selectNewMarket">
             <option> Mercado </option>
             <option> Farmacia </option>
             <option> PetShop </option>
@@ -65,8 +85,8 @@ export default function ModalNewItem(props) {
         </div>
         
         <div className="modal-btns">
-          <button className='btn-mini' onClick={createNewItem}> Criar </button>
-          <button className='btn-mini' onClick={closeModal}> Fechar </button>
+          <button onClick={createNewItem}> Criar </button>
+          <button onClick={closeModal}> Fechar </button>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 
 from .serializer import ItemModelSerializer, PantrySerializer
-from .models import ItemModel, Pantry, PantryItem
+from .models import ItemModel, Pantry
 from system.utils import check_profanity
 
 
@@ -17,6 +17,7 @@ class ItemModelView(ModelViewSet):
         """ Envia a lista com todos os items """
         items = self.get_queryset()
         serializer = self.serializer_class(items, many=True)
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
@@ -25,20 +26,17 @@ class ItemModelView(ModelViewSet):
             if check_profanity(request):
                 return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
 
-            serializer = ItemModelSerializer(request.data, many=False)
+            serializer = ItemModelSerializer(data=request.data, many=False)
             if serializer.is_valid():
                 market = request.data.get('market', 'Mercado')
                 name = request.data.get('name').title()
 
-                try:
-                    # Verifica se o item já existe, se não, cria o item
-                    ItemModel.objects.gete(market=market, name=name)
-                    return Response("Item já existe", status=status.HTTP_200_OK)
+                item, created = ItemModel.objects.get_or_create(market=market, name=name)
 
-                except ObjectDoesNotExist:
-                    item = serializer.save()
-                    data = ItemModelSerializer(item).data
-                    return Response(data, status=status.HTTP_201_CREATED)
+                if created:
+                    return Response(status=status.HTTP_201_CREATED)
+
+                return Response("Item já existe", status=status.HTTP_200_OK)
 
             else:
                 raise KeyError # Gera um keyerror se o serializer for invalido

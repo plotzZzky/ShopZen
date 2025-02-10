@@ -1,0 +1,70 @@
+import { useState } from "react";
+import { getUserProfile } from "../supabase";
+
+export default function ModalNewCart(props) {
+  const userProfile = getUserProfile();
+  const [getName, setName] = useState("");
+
+  function closeModal() {
+    document.getElementById("ModalNewCart").style.display = 'none';
+  };
+
+  function createNewCart() {
+    const url = "http://127.0.0.1:8000/shop/"
+    const market = document.getElementById("selectNewMarket").value;
+
+    const form = new FormData();
+    form.append("name", getName);
+    form.append("market", market);
+    form.append("owner", userProfile.id);
+
+    const requestData = {
+      method: 'POST',
+      body: form,
+      headers: {
+        Authorization: `Bearer ${userProfile.jwt}`,
+        Token: `Token ${userProfile.token}`
+      },
+    }
+
+    fetch(url, requestData)
+      .then((response) => {
+        if (response.ok) {
+          props.getAllCards();
+          closeModal();
+          setName("");
+        }
+      })
+  };
+
+  function HandlingName(event) {
+    const value = event.target.value;
+    setName(value);
+  };
+
+  return (
+    <>
+      <div className='modal-background' id="ModalNewCart" onClick={closeModal}>
+        <div className="modal" onClick={e => e.stopPropagation()}>
+          <a className="modal-title"> Criar uma nova lista de compras: </a>
+
+          <div className="modal-align">
+            <input placeholder="Nome do lista de compras" onChange={HandlingName} value={getName}></input>
+
+            <select id="selectNewMarket" >
+              <option>Mercado</option>
+              <option>Farmacia</option>
+              <option>PetShop</option>
+            </select>
+          </div>
+
+          <div className="modal-btns">
+            <button onClick={createNewCart}> Criar </button>
+            <button onClick={closeModal}> Fechar </button>
+          </div>
+
+        </div>
+      </div>
+    </>
+  )
+}

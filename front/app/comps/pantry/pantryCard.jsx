@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { useAuth } from '../authContext';
+import { getUserProfile } from '../supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function PantryCard(props) {
-  const [getToken, setToken] = useAuth();
+  const userProfile = getUserProfile();
   const [getDate, setDate] = useState(props.data.date)
 
   const ALERT = () => {
@@ -33,17 +33,22 @@ export default function PantryCard(props) {
     const value = event.target.value;
     const itemId = props.data.id
 
-    const formData = new FormData();
-    formData.append("date", value)
+    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
+
+    const form = new FormData();
+    form.append("date", value)
     setDate(value)
 
-    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
-    const data = {
+    const requetsData = {
       method: 'PATCH',
-      body: formData,
-      headers: { Authorization: 'Token ' + getToken }
-    }
-    fetch(url, data);
+      body: form,
+      headers: {
+        Authorization: `Bearer ${userProfile.jwt}`,
+        Token: `Token ${userProfile.token}`
+      }
+    };
+
+    fetch(url, requetsData);
   };
 
   // Remove o item da despensa no back
@@ -53,8 +58,12 @@ export default function PantryCard(props) {
 
     const data = {
       method: 'DELETE',
-      headers: { Authorization: 'Token ' + getToken }
-    }
+      headers: {
+        Authorization: `Bearer ${userProfile.jwt}`,
+        Token: `Token ${userProfile.token}`
+      }
+    };
+
     fetch(url, data)
     props.delete() //Função que deleta o card do item no front
   };
@@ -66,7 +75,9 @@ export default function PantryCard(props) {
       <a className='card-market'>{props.data.item.market}</a>
       <div className='pantry-align-btn'>
         {ALERT()}
+
         <input className='card-date' type='date' value={getDate} onChange={changeDate}></input>
+        
         <FontAwesomeIcon icon={faTrash} onClick={removeFromPantry} />
       </div>
     </div>

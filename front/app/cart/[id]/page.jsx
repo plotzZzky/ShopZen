@@ -1,22 +1,24 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { getUserJsonFromSupabase } from "@comps/supabase";
+import { getUserProfile } from "@comps/supabase";
 
 import NavBar from "@comps/navbar";
 import CartBar from "@cart/cartBar";
 import ModalAdd from "@items/modalAddItem";
 import ModalNewItem from "@items/modalNewItem";
-import ShoppingCard from "@shop/shoppingCard";
+import ShoppingCard from "@/app/comps/cart/cartCard";
+import "../../app.css"
 
 
 export default function Cart({ params }) {
-  const userProfile = getUserJsonFromSupabase();
+  const userProfile = getUserProfile();
+  const router = useRouter();
+
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
   const [getShowModal, setShowModal] = useState(false)
-  const [getCartName, setCartName] = useState("");
-  const router = useRouter();
+  const [getCartName, setCartName] = useState("Carregando...");
 
   useEffect(() => {
     checkLogin()
@@ -33,10 +35,11 @@ export default function Cart({ params }) {
   function loadCartItems() {
     const cartName = `Cart ${params.id}`
     const cachedItems = sessionStorage.getItem(cartName)
+
     if (cachedItems) {
-      createItemsCards(cachedItems)
+      createItemsCards(cachedItems);
     } else {
-      getItemsFromBackEnd()
+      getItemsFromBackEnd();
     }
   };
 
@@ -44,11 +47,14 @@ export default function Cart({ params }) {
     // Busca a listas com os produtos deste carrinho no back
     if (userProfile.token && params.id) {  // Verifica se esta logado e se o CardId foi passado 
       const cartID = params.id
-      const url = `http://127.0.0.1:8000/shop/item/${cartID}/`;
+      const url = `http://127.0.0.1:8000/cart/${cartID}/`;
 
       const formnData = {
         method: 'GET',
-        headers: { Authorization: 'Token ' + getToken },
+        headers: {
+          Authorization: `Bearer ${userProfile.jwt}`,
+          Token: `Token ${userProfile.token}`
+        }
       };
       
       fetch(url, formnData)
@@ -67,7 +73,7 @@ export default function Cart({ params }) {
   }
   
   function createItemsCards(value) {
-    if (value) {
+    if (typeof value === Array) {
       setCards(
         value.map((data, index) => (
           <ShoppingCard 
@@ -107,11 +113,21 @@ export default function Cart({ params }) {
       sessionStorage.setItem(cartName, updatedItems); // Salva a nova lista de items
     };
 
-    removeItemFromBackEnd();
+    removeItemFromBackEnd(itemID);
   };
 
-  function removeItemFromBackEnd() {
-    // Precisa ser feito
+  function removeItemFromBackEnd(itemID) {
+    const url = `http://127.0.0.1:8000/shop/items/${itemID}/`;
+
+    const requestData = {
+      method: "DELETE",
+      headers: {
+        jwt: `Authorization ${userProfile.jwt}`,
+        token: `Token ${userProfile.token}`
+      }
+    };
+
+    fetch(url, requestData);
   };
 
   return (

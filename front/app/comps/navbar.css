@@ -80,7 +80,7 @@ nav span:hover::before {
   gap: 0 clamp(5px, 0.5vw, 10px);
 }
 
-.app-btn {
+.app-bar button {
   padding: 0.5vh 0.5vw;
   font-size: clamp(0.9em, 2vw, 1.1em);
   font-weight: bold;
