@@ -60,9 +60,17 @@ export default function CartBar(props) {
   return (
     <div className="app-bar">
       <div className='app-bar-align'>
-        <button onClick={showModalNew}><FontAwesomeIcon icon={faPlus}/></button>
-        <button onClick={showModalAdd}><FontAwesomeIcon icon={faCartPlus}/></button>
-        <button onClick={buyList}><FontAwesomeIcon icon={faCartShopping}/></button>
+        <span onClick={showModalNew}>
+          <FontAwesomeIcon icon={faPlus} />
+        </span>
+
+        <span onClick={showModalAdd}>
+          <FontAwesomeIcon icon={faCartPlus}/>
+        </span>
+
+        <span onClick={buyList}>
+          <FontAwesomeIcon icon={faCartShopping}/>
+        </span>
 
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>
       </div>

@@ -134,16 +134,16 @@ export default function Cart({ params }) {
     <>
       <NavBar appbar={<CartBar getCart={getItemsFromBackEnd}/>} />
 
-      <div className='page banner'>
-        <div className='cards'>
-          <a className="page-title">{getCartName} </a>
-          {getCards}
-        </div>
-        
-        <ModalAdd getCart={getItemsFromBackEnd} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAdd>
+      <div className='cards'>
+        <a className="page-title">{getCartName} </a>
 
-        <ModalNewItem setShow={setShowModal} market={getMarket}></ModalNewItem>
+        {getCards}
+        
       </div>
+      
+      <ModalAdd getCart={getItemsFromBackEnd} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAdd>
+
+      <ModalNewItem setShow={setShowModal} market={getMarket}></ModalNewItem>
     </>
   )
 }

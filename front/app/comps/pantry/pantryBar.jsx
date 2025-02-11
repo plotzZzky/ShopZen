@@ -33,11 +33,13 @@ export default function PantryBar() {
   return (
     <div className="app-bar">
       <div className='app-bar-align'>
+        
         <select className='app-select' id='selectMarket' onChange={changeMarket}>
           <option> Mercado </option>
           <option> Farmacia </option>
           <option> PetShop </option>
         </select>
+
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>
       </div>
     </div>

@@ -34,31 +34,35 @@ export const supaBase = createClient(
 export const getUserProfile = () => {
   // Retorna o json simplificado do usuario
   if (typeof window !== "undefined") {
-    const userprofile = sessionStorage.getItem("shopzen-userprofile");
+    let userprofile = sessionStorage.getItem("shopzen-userprofile");
 
     if (!userprofile) {
-      const userprofile = createUserProfile();
-    };
-  
-    sessionStorage.removeItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME); // remove o token do supabase
+      const supabaseToken = sessionStorage.getItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME);  // Recebe o supabase token do sessionStorage
 
-    return userprofile;
+      if (!supabaseToken) {
+        return undefined;
+      };
+
+      userprofile = createUserProfile(supabaseToken);
+      sessionStorage.removeItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME); // remove o token do supabase
+    };
+
+    return JSON.parse(userprofile);
   };
 };
 
 
-function createUserProfile() {
+function createUserProfile(supabaseToken) {
   if (typeof window !== "undefined") {
-    const supabaseToken = sessionStorage.getItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME);  // Recebe o supabase token do sessionStorage
 
     if (supabaseToken) {
       const parsedData = JSON.parse(supabaseToken);  // Converte o str do sessionStorage em Json
-      const base_token =  parsedData.user.id + parsedData.user.identities[0].identity_id;
+      const baseToken =  parsedData.user.id + parsedData.user.identities[0].identity_id;
 
       // Gera o user token
       const crypto = require("crypto")
       const key = process.env.NEXT_PUBLIC_RANDOM_SECRET_KEY
-      const hash = crypto.createHash('sha256').update(base_token + key).digest('hex');
+      const hash = crypto.createHash('sha256').update(baseToken + key).digest('hex');
 
       const userprofile = {
         "id": parsedData.user.id,
@@ -66,7 +70,7 @@ function createUserProfile() {
         "token": hash,
       };
 
-      sessionStorage.setItem("shopzen-userprofile", userprofile);
+      sessionStorage.setItem("shopzen-userprofile", JSON.stringify(userprofile));
   
       return userprofile;
     };

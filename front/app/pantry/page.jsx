@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation';
 import { getUserProfile } from '@comps/supabase';
 import NavBar from '@comps/navbar'
@@ -119,12 +119,12 @@ export default function Pantry() {
     <>
       <NavBar appbar={<PantryBar />} />
 
-      <div className='page banner'>
         <div className='cards'>
           <a className="page-title"> Sua dispensa </a>
+
           {getCards}
+          
         </div>
-      </div>
     </>
   )
 }

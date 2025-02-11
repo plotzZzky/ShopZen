@@ -29,9 +29,12 @@ export default function ShopBar() {
   return (
     <div className="app-bar">
       <div className='app-bar-align'>
-          <button onClick={showModalNew}><FontAwesomeIcon icon={faCartPlus} /></button>
 
-          <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar uma lista de compras'></input>
+        <span onClick={showModalNew}>
+          <FontAwesomeIcon icon={faCartPlus}/>
+        </span>
+
+        <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar uma lista de compras'></input>
       </div>
     </div>
   )

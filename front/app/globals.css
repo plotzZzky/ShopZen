@@ -11,7 +11,7 @@
 
   --color_accent: #1e5088;
 
-  --background: linear-gradient(90deg, rgb(255, 255, 255), rgb(240, 249, 255));
+  --background:rgb(212, 218, 221);
 
   --fontColor_sec: rgb(228, 217, 217);
   --fontColor_pri: rgb(46, 45, 45);
@@ -37,15 +37,6 @@ section {
   padding: 3vh 2vw 1vh;
   min-height: 96vh;
   background-image: var(--background);
-}
-
-.page {
-  padding: 4vh 0 0;
-  min-height: 96vh;
-}
-
-.page-home p {
-  font-size: clamp(1em, 1.5vw, 1.3em);
 }
 
 #Start {

@@ -80,6 +80,7 @@ export default function NavBar(props) {
 
   //Funções de navegação pelas paginas
   function goHome() {
+    console.log(getPath)
     if (getPath === '/') {
       document.getElementById('Start').scrollIntoView();
     } else {

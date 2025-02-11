@@ -34,13 +34,14 @@ nav span {
   text-align: center;
   color: var(--color_accent);
   font-weight: bold;
-  font-size: clamp(0.8em, 2vw, 1em);
+  font-size: clamp(0.7em, 2vw, 1em);
   cursor: pointer;
   position: relative;
 }
 
 nav span * {
   color: var(--color_accent);
+  font-size: clamp(0.7em, 2vw, 1em);
 }
 
 nav span::before {
@@ -72,51 +73,11 @@ nav span:hover::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 990;
 }
 
 .app-bar-align {
   display: inline-flex;
   gap: 0 clamp(5px, 0.5vw, 10px);
-}
-
-.app-bar button {
-  padding: 0.5vh 0.5vw;
-  font-size: clamp(0.9em, 2vw, 1.1em);
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-}
-
-.app-btn * {
-  color: var(--color_accent);
-  font-size: clamp(1.2em, 2vw, 1.3em);
-}
-
-.app-btn::before {
-  content: '';
-  position: absolute;
-  inset: -0.5vh;
-  padding: 0.5vh 0.5vw;
-  transform-origin: center;
-  transform: scaleY(1.1);
-  transition: all 0.2s ease-in-out;
-  z-index: -1;
-  opacity: 0;
-  border-top: 2px solid var(--color_accent);
-  border-bottom: 3px solid var(--color_accent);
-  border-radius: 0;
-  background-color: transparent;
-}
-
-.app-btn:hover::before {
-  transform-origin: center;
-  transform: scaleY(1);
-  opacity: 0.8;
 }
 
 .app-select {

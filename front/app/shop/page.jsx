@@ -27,7 +27,7 @@ export default function Shop() {
 
   function checkLogin() {
     if (!userProfile?.jwt) {
-      router.push("/");
+      router.push("");
     } else {
       getAllCartsFromBackEnd();
     };
@@ -86,7 +86,6 @@ export default function Shop() {
     <>
       <NavBar appbar={<ShopBar/>}/>
 
-      <div className='page banner'>
         <div className='cards'>
           <a className="page-title"> Suas listas de compras </a>
 
@@ -95,7 +94,6 @@ export default function Shop() {
         </div>
 
         <ModalNewCart getAllCarts={getAllCartsFromBackEnd} />
-      </div>
     </>
   )
 }
