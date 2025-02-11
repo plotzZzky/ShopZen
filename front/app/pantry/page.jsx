@@ -117,14 +117,14 @@ export default function Pantry() {
 
   return (
     <>
-      <NavBar appbar={<PantryBar />} />
+      <PantryBar />
 
-        <div className='cards'>
-          <a className="page-title"> Sua dispensa </a>
+      <div className='cards'>
+        <a className="page-title"> Sua dispensa </a>
 
-          {getCards}
-          
-        </div>
+        {getCards}
+        
+      </div>
     </>
   )
 }

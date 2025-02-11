@@ -58,7 +58,7 @@ export default function CartBar(props) {
   };
 
   return (
-    <div className="app-bar">
+    <nav className="app-bar">
       <div className='app-bar-align'>
         <span onClick={showModalNew}>
           <FontAwesomeIcon icon={faPlus} />
@@ -74,6 +74,6 @@ export default function CartBar(props) {
 
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>
       </div>
-    </div>
+    </nav>
   )
 }

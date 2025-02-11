@@ -8,7 +8,7 @@ import './navbar.css'
 
 
 export default function NavBar(props) {
-  const userProfile = getUserProfile();
+  let userProfile = getUserProfile();
   const router = useRouter();
   const getPath = usePathname();
 
@@ -48,9 +48,11 @@ export default function NavBar(props) {
 
   const LOGIN = () => {
     return !userProfile?.jwt? (
-      <span onClick={handleLogin}>
-        <FontAwesomeIcon icon={faUser}/> Entrar
-      </span>
+      <div style={{justifyContent: 'flex-end'}}>
+        <span onClick={handleLogin}>
+          <FontAwesomeIcon icon={faUser}/> Entrar
+        </span>
+      </div>
     ) : null
   };
 
@@ -70,17 +72,8 @@ export default function NavBar(props) {
     ) : null
   }
 
-  const APPBAR = () => {
-    return props.appbar?(
-      <div className="nav-div">
-        {props.appbar}
-      </div>
-    ) : null
-  }
-
   //Funções de navegação pelas paginas
   function goHome() {
-    console.log(getPath)
     if (getPath === '/') {
       document.getElementById('Start').scrollIntoView();
     } else {
@@ -120,9 +113,9 @@ export default function NavBar(props) {
 
   const handleLogin = async () => {
     await supaBase.auth.signInWithOAuth({
-      provider: "google",
-      redirectTo: "http://localhost:3000/shop"
+      provider: "google"
     });
+
   };
 
   return (
@@ -148,11 +141,7 @@ export default function NavBar(props) {
 
         </div>
 
-        {APPBAR()}
-
-        <div style={{justifyContent: 'flex-end'}}>
-          {LOGIN()}
-        </div>
+        {LOGIN()}
       </div>
     </nav>
   )

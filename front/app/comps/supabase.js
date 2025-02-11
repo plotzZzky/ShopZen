@@ -31,7 +31,7 @@ export const supaBase = createClient(
 );
 
 
-export const getUserProfile = () => {
+export function getUserProfile () {
   // Retorna o json simplificado do usuario
   if (typeof window !== "undefined") {
     let userprofile = sessionStorage.getItem("shopzen-userprofile");

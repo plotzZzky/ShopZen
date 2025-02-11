@@ -27,7 +27,7 @@ export default function ShopBar() {
   };
 
   return (
-    <div className="app-bar">
+    <nav className="app-bar">
       <div className='app-bar-align'>
 
         <span onClick={showModalNew}>
@@ -36,6 +36,6 @@ export default function ShopBar() {
 
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar uma lista de compras'></input>
       </div>
-    </div>
+    </nav>
   )
 }

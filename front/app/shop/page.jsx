@@ -17,20 +17,20 @@ export default function Shop() {
   const [getCards, setCards] = useState([]);
 
   useEffect(() => {
-    if (!didMount.current) {
-      didMount.current = true; // Marcar que o componente foi montado
-      return;
-    };
-    
     checkLogin();
   }, []);
 
   function checkLogin() {
     if (!userProfile?.jwt) {
-      router.push("");
-    } else {
-      getAllCartsFromBackEnd();
+      router.push("/");
     };
+      
+    if (!didMount.current) {
+      didMount.current = true; // Marcar que o componente foi montado
+      return;
+    };
+
+    getAllCartsFromBackEnd();
   };
 
   async function getAllCartsFromBackEnd() {
@@ -84,16 +84,16 @@ export default function Shop() {
 
   return (
     <>
-      <NavBar appbar={<ShopBar/>}/>
+      <ShopBar/>
 
-        <div className='cards'>
-          <a className="page-title"> Suas listas de compras </a>
+      <div className='cards'>
+        <a className="page-title"> Suas listas de compras </a>
 
-          {getCards}
+        {getCards}
 
-        </div>
+      </div>
 
-        <ModalNewCart getAllCarts={getAllCartsFromBackEnd} />
+      <ModalNewCart getAllCarts={getAllCartsFromBackEnd} />
     </>
   )
 }

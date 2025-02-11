@@ -132,7 +132,7 @@ export default function Cart({ params }) {
 
   return (
     <>
-      <NavBar appbar={<CartBar getCart={getItemsFromBackEnd}/>} />
+      <CartBar getCart={getItemsFromBackEnd}/>
 
       <div className='cards'>
         <a className="page-title">{getCartName} </a>

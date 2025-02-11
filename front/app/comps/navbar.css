@@ -2,7 +2,7 @@ nav {
   position: fixed;
   inset: 0 0 auto 0;
   padding: 0;
-  z-index: 999;
+  z-index: 990;
   backdrop-filter: blur(4px);
   background-color: white;
   box-shadow: var(--shadow);
@@ -67,16 +67,19 @@ nav span:hover::before {
 
 /* App */
 .app-bar {
+  position: fixed;
   width: 100%;
-  margin: 0;
+  margin: 4vh 0 auto;
   padding: 0 1vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .app-bar-align {
   display: inline-flex;
+  justify-content: center;
   gap: 0 clamp(5px, 0.5vw, 10px);
 }
 
