@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getUserProfile } from "../supabase";
-import ItemCard from "../cart/ItemCard";
+import NewItemCard from "../cart/NewItemCard";
 
 
 export default function ModalAdd(props) {
@@ -23,9 +23,14 @@ export default function ModalAdd(props) {
 
     if (items) {
       createCartItemCards(JSON.parse(items));
+    } else {
+      getItemsModelFromBackEnd();
     };
+  };
 
+  async function getItemsModelFromBackEnd() {
     const url = "http://127.0.0.1:8000/item/"
+
     const requestData = {
       method: "GET",
       headers: {
@@ -50,8 +55,8 @@ export default function ModalAdd(props) {
       const filtered = items.filter(item => item.market === market);
 
       setCardsNew(
-        filtered.map((data, index) => (
-          <ItemCard name={data.name} amount={data.amount} key={index} itemId={data.id} cartId={props.cartId}></ItemCard>
+        filtered.map(({name, id, market}, index) => (
+          <NewItemCard name={name} itemId={id} market={market} cartId={props.cartId} key={index} />
         ))
       );
     }
@@ -72,15 +77,14 @@ export default function ModalAdd(props) {
     });
   };
 
-  function closeModal() {
-    props.getCart();
+  function closeThisModal() {
     document.getElementById("ModalAdd").style.display = 'none';
     props.setShow(false);
   };
 
 
   return (
-    <div className='modal-background' id="ModalAdd" onClick={closeModal}>
+    <div className='modal-background' id="ModalAdd" onClick={closeThisModal}>
       <div className='modal-add' onClick={e => e.stopPropagation()}>
         <a className="modal-title"> Items para adicionar </a>
 
@@ -90,7 +94,7 @@ export default function ModalAdd(props) {
         </div>
 
         <div className="modal-btns">
-          <button className='btn-mini' onClick={closeModal}> Fechar </button>
+          <button className='btn-mini' onClick={closeThisModal}> Fechar </button>
         </div>
       </div>
     </div>

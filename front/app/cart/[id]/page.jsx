@@ -3,12 +3,11 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getUserProfile } from "@comps/supabase";
 
-import NavBar from "@comps/navbar";
 import CartBar from "@cart/cartBar";
-import ModalAdd from "@items/modalAddItem";
+import ModalAddItem from "@items/modalAddItem";
 import ModalNewItem from "@items/modalNewItem";
-import ShoppingCard from "@/app/comps/cart/cartCard";
-import "../../app.css"
+import ShoppingCard from "@comps/cart/cartCard";
+import "@app/app.css"
 
 
 export default function Cart({ params }) {
@@ -25,8 +24,8 @@ export default function Cart({ params }) {
   }, []);
 
   function checkLogin() {
-    if (!userProfile.jwt) {
-      router.push("/login");
+    if (!userProfile?.jwt) {
+      router.push("/");
     } else {
       loadCartItems();
     }
@@ -35,9 +34,10 @@ export default function Cart({ params }) {
   function loadCartItems() {
     const cartName = `Cart ${params.id}`
     const cachedItems = sessionStorage.getItem(cartName)
+    console.log(cachedItems)
 
     if (cachedItems) {
-      createItemsCards(cachedItems);
+      createItemsCards(JSON.parse(cachedItems));
     } else {
       getItemsFromBackEnd();
     }
@@ -69,13 +69,14 @@ export default function Cart({ params }) {
 
   function saveItemsInSessionStorage(value, cartID) {
     const name = `Cart ${cartID}`;
-    sessionStorage.setItem(name, value);
+    sessionStorage.setItem(name, JSON.stringify(value));
   }
   
-  function createItemsCards(value) {
-    if (typeof value === Array) {
+  function createItemsCards(itemsCart) {
+    if (itemsCart) {
+
       setCards(
-        value.map((data, index) => (
+        itemsCart.map((data, index) => (
           <ShoppingCard 
             key={index} name={data.item.name} amount={data.amount} cartId={data.cart} 
             itemId={data.id} modelId={data.item.id} delete={() => removeItemCard(index, data.id)}>
@@ -141,7 +142,7 @@ export default function Cart({ params }) {
         
       </div>
       
-      <ModalAdd getCart={getItemsFromBackEnd} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAdd>
+      <ModalAddItem getCart={getItemsFromBackEnd} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAddItem>
 
       <ModalNewItem setShow={setShowModal} market={getMarket}></ModalNewItem>
     </>

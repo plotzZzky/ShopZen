@@ -25,11 +25,6 @@ class CartItem(models.Model):
 
     objects = models.Manager()
 
-    def save(self, *args, **kwargs):
-        # Deixa o nome com a inicial maiuscula
-        self.name = self.name.capitalize()  # type:ignore
-        super(CartItem, self).save(*args, **kwargs)
-
     def __str__(self):
         value: str = self.item.name
         return value

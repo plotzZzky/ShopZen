@@ -3,10 +3,11 @@ import { getUserProfile } from "../supabase";
 
 export default function ModalNewCart(props) {
   const userProfile = getUserProfile();
-  const [getName, setName] = useState("");
+  const [cartName, setCartName] = useState("");
 
-  function closeModal() {
+  function closeThisModal() {
     document.getElementById("ModalNewCart").style.display = 'none';
+    setCartName("");
   };
 
   function createNewCart() {
@@ -14,7 +15,7 @@ export default function ModalNewCart(props) {
     const market = document.getElementById("selectNewMarket").value;
 
     const form = new FormData();
-    form.append("name", getName);
+    form.append("name", cartName);
     form.append("market", market);
     form.append("owner", userProfile.id);
 
@@ -30,26 +31,25 @@ export default function ModalNewCart(props) {
     fetch(url, requestData)
       .then((response) => {
         if (response.ok) {
-          props.getAllCards();
-          closeModal();
-          setName("");
+          closeThisModal();
+          props.getAllCarts();
         }
-      })
+    })
   };
 
   function HandlingName(event) {
     const value = event.target.value;
-    setName(value);
+    setCartName(value);
   };
 
   return (
     <>
-      <div className='modal-background' id="ModalNewCart" onClick={closeModal}>
+      <div className='modal-background' id="ModalNewCart" onClick={closeThisModal}>
         <div className="modal" onClick={e => e.stopPropagation()}>
           <a className="modal-title"> Criar uma nova lista de compras: </a>
 
           <div className="modal-align">
-            <input placeholder="Nome do lista de compras" onChange={HandlingName} value={getName}></input>
+            <input placeholder="Nome do lista de compras" onChange={HandlingName} value={cartName}></input>
 
             <select id="selectNewMarket" >
               <option>Mercado</option>
@@ -60,7 +60,7 @@ export default function ModalNewCart(props) {
 
           <div className="modal-btns">
             <button onClick={createNewCart}> Criar </button>
-            <button onClick={closeModal}> Fechar </button>
+            <button onClick={closeThisModal}> Fechar </button>
           </div>
 
         </div>

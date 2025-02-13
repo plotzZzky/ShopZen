@@ -4,8 +4,8 @@ from rest_framework import status
 from rest_framework.decorators import action
 from django.core.exceptions import ObjectDoesNotExist
 
-from .serializer import CartSerializer, CartItemSerializer
-from .models import ItemModel, Cart, CartItem
+from .serializer import CartSerializer, CartItemCreateSerializer, CartItemReturnSerializer
+from .models import Cart, CartItem
 from system.utils import check_profanity
 from items.models import Pantry, PantryItem
 
@@ -92,9 +92,9 @@ class CartView(ModelViewSet):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class ItemCartView(ModelViewSet):
+class CartItemView(ModelViewSet):
     """ ClassView dos items do cart baseados no item model"""
-    serializer_class = CartItemSerializer
+    serializer_class = CartItemCreateSerializer
     queryset = []
 
     def retrieve(self, request, *args, **kwargs):
@@ -116,30 +116,15 @@ class ItemCartView(ModelViewSet):
             if check_profanity(request):
                 return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
 
-            serializer = CartItemSerializer(data=request.data, many=True)
+            serializer = CartItemCreateSerializer(data=request.data, many=False)
 
             if serializer.is_valid():
-                owner: str = request.data['owner']
-                cart = Cart.objects.get(owner=owner)
-
-                item_model_id = request.data['itemID']
-                item_model = ItemModel.objects.get(pk=item_model_id)
-
-                item, created = CartItem.objects.get_or_create(item=item_model, cart=cart)
-                amount = request.data.get('amount', None)
-
-                if not created:
-                    if int(amount) == 0:
-                        item.delete()
-                        return Response({"msg": "Item removido da lista!"}, status=status.HTTP_200_OK)
-
-                    item.amount = amount
-                    item.save()
-                    msg = f"Quantidade aumentada para {amount}"
-                    return Response({"msg": msg}, status=status.HTTP_200_OK)
+                item = serializer.save()
+                result = CartItemReturnSerializer(item, many=False)
+                return Response(result.data, status=status.HTTP_201_CREATED)
 
             else:
-                return Response({"msg": "Item criado"}, status=status.HTTP_201_CREATED)
+                return Response(status.HTTP_400_BAD_REQUEST)
 
         except (TypeError, KeyError, ValueError, ObjectDoesNotExist):
             return Response({"error": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)
