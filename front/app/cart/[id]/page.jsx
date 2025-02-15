@@ -1,18 +1,21 @@
 'use client'
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { getUserProfile } from "@comps/supabase";
 
+import { retrieveCartFromSessionStorage, removeItemFromSessionStorage, saveCartOnSessionStorage } from "@items/itemSS";
+import { headers } from "@comps/headers";
+import { getUserProfile } from "@comps/supabase";
 import CartBar from "@cart/cartBar";
 import ModalAddItem from "@items/modalAddItem";
-import ModalNewItem from "@items/modalNewItem";
-import ShoppingCard from "@comps/cart/cartCard";
+import ModalCreateNewItem from "@items/modalNewItem";
+import ItemCardCart from "@cart/cartCard";
 import "@app/app.css"
 
 
 export default function Cart({ params }) {
   const userProfile = getUserProfile();
   const router = useRouter();
+  const didMount = useRef(false); // Controla a primeira renderização
 
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
@@ -20,27 +23,31 @@ export default function Cart({ params }) {
   const [getCartName, setCartName] = useState("Carregando...");
 
   useEffect(() => {
-    checkLogin()
-  }, []);
+    if (!didMount.current) {
+      didMount.current = true; // Marcar que o componente foi montado
+      return;
+    };
+
+    checkLogin();
+  }, [userProfile?.jwt]);
 
   function checkLogin() {
     if (!userProfile?.jwt) {
-      router.push("/");
+      router.push("/")
+      
     } else {
       loadCartItems();
-    }
+    };
   };
 
   function loadCartItems() {
-    const cartName = `Cart ${params.id}`
-    const cachedItems = sessionStorage.getItem(cartName)
-    console.log(cachedItems)
+    const cachedItems = retrieveCartFromSessionStorage();
 
     if (cachedItems) {
       createItemsCards(JSON.parse(cachedItems));
     } else {
       getItemsFromBackEnd();
-    }
+    };
   };
 
   function getItemsFromBackEnd() {
@@ -51,40 +58,37 @@ export default function Cart({ params }) {
 
       const formnData = {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${userProfile.jwt}`,
-          Token: `Token ${userProfile.token}`
-        }
+        headers: headers
       };
       
       fetch(url, formnData)
         .then((res) => res.json())
         .then((data) => {
-          saveItemsInSessionStorage(data.items, cartID);
-          createItemsCards(data.items);
-          setCartName(data.name);
+          createItemsCards(data);
+          saveCartOnSessionStorage(data.items, cartID)
         });
     }
   };
 
-  function saveItemsInSessionStorage(value, cartID) {
-    const name = `Cart ${cartID}`;
-    sessionStorage.setItem(name, JSON.stringify(value));
-  }
-  
-  function createItemsCards(itemsCart) {
-    if (itemsCart) {
-
+  function createItemsCards(cart) {
+    if (cart.items) {
       setCards(
-        itemsCart.map((data, index) => (
-          <ShoppingCard 
-            key={index} name={data.item.name} amount={data.amount} cartId={data.cart} 
-            itemId={data.id} modelId={data.item.id} delete={() => removeItemCard(index, data.id)}>
-          </ShoppingCard>
+        cart.items.map(({item, amount, cart, id,}, index) => (
+          <ItemCardCart
+            name={item.name}
+            amount={amount}
+            cartId={cart} 
+            itemId={id}
+            modelId={item.id} 
+            delete={() => removeItemCard(index, id)}
+          />
         ))
       );
+
+      setCartName(cart.name)
     };
   };
+
 
   function removeItemCard(indexToRemove, itemID) {
     /**
@@ -95,37 +99,16 @@ export default function Cart({ params }) {
       prevCards.filter((card, index) => index !== indexToRemove)
     );
 
-    removeItemFromSessionStorage(itemID);
-  };
-
-  function removeItemFromSessionStorage(itemID) {
-    /**
-     * Remove o item selecionado do sessionStorage
-     * @param {integer} itemID - O ID do item a ser removido
-     */
-    const cartName = `Cart ${params.id}`;
-    const cachedItems = sessionStorage.getItem(cartName);
-
-    if (cachedItems) {
-      const jsonItems = JSON.parse(cachedItems);
-
-      const updatedItems = jsonItems.filter(item => item.id !== itemID); // Retorna a lista com todos os items exceto o selecionado
-
-      sessionStorage.setItem(cartName, updatedItems); // Salva a nova lista de items
-    };
-
+    removeItemFromSessionStorage(params.id, itemID)
     removeItemFromBackEnd(itemID);
   };
 
   function removeItemFromBackEnd(itemID) {
-    const url = `http://127.0.0.1:8000/shop/items/${itemID}/`;
+    const url = `http://127.0.0.1:8000/cart/${itemID}/`;
 
     const requestData = {
       method: "DELETE",
-      headers: {
-        jwt: `Authorization ${userProfile.jwt}`,
-        token: `Token ${userProfile.token}`
-      }
+      headers: headers
     };
 
     fetch(url, requestData);
@@ -133,7 +116,7 @@ export default function Cart({ params }) {
 
   return (
     <>
-      <CartBar getCart={getItemsFromBackEnd}/>
+      <CartBar getCart={loadCartItems}/>
 
       <div className='cards'>
         <a className="page-title">{getCartName} </a>
@@ -142,9 +125,9 @@ export default function Cart({ params }) {
         
       </div>
       
-      <ModalAddItem getCart={getItemsFromBackEnd} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id}></ModalAddItem>
+      <ModalAddItem createCards={loadCartItems} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id} />
 
-      <ModalNewItem setShow={setShowModal} market={getMarket}></ModalNewItem>
+      <ModalCreateNewItem setShow={setShowModal} market={getMarket}></ModalCreateNewItem>
     </>
   )
 }

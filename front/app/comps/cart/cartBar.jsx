@@ -3,6 +3,8 @@ import { getUserProfile } from '../supabase';
 import { useParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
+
+import { headers } from '../headers';
 import '@comps/navbar.css'
 
 
@@ -29,17 +31,15 @@ export default function CartBar(props) {
   function buyList() {
     // Adiciona os items da lista a dispensa e remove do carrinho
     const form = new FormData();
-    form.append("cartId", urlParams.id)
+    form.append("cartId", urlParams?.id)
+    form.append("owner", userProfile?.id)
 
-    const url = "http://127.0.0.1:8000/cart/buy/"
+    const url = "http://127.0.0.1:8000/shop/buy/"
 
     const requestData = {
       method: 'POST',
       body: form,
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      }
+      headers: headers
     };
 
     fetch(url, requestData)

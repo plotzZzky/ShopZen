@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { getUserProfile } from "../supabase";
-import NewItemCard from "../cart/NewItemCard";
+import NewItemCard from "@items/NewItemCard";
+import { headers } from "../headers";
 
 
-export default function ModalAdd(props) {
-  const userProfile = getUserProfile();
+export default function ModalAddItemToCart(props) {
   const didMount = useRef(false); // Controla a primeira renderização
 
   const [getCardsNew, setCardsNew] = useState([]);
@@ -19,44 +18,49 @@ export default function ModalAdd(props) {
   }, []);
 
   async function loadItemsModel() {
+    /**
+     * Verifica se os itemModels estão salvos no sessionStorage
+    */
     const items = sessionStorage.getItem("items");
 
     if (items) {
       createCartItemCards(JSON.parse(items));
+
     } else {
       getItemsModelFromBackEnd();
     };
   };
 
   async function getItemsModelFromBackEnd() {
-    const url = "http://127.0.0.1:8000/item/"
+    /**
+     * Busca os itemModels no backEnd 
+    */
+    const url = "http://127.0.0.1:8000/item/";
 
     const requestData = {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      },
-    }
+      headers: headers
+    };
 
     const response = await fetch(url, requestData);
+
     if (response.ok) {
-      const data = await response.json()
-      createCartItemCards(data)
+      const data = await response.json();
+      createCartItemCards(data);
       sessionStorage.setItem("items", JSON.stringify(data));
-    }
+    };
   };
 
   function createCartItemCards(items) {
     // Cria os cards com os items models
-    const market = "Mercado" // props.market
+    const market = props.market
     
     if (items) {
-      const filtered = items.filter(item => item.market === market);
+      const filtered = items.filter(item => item.market === market);  // Somente cria os cards do market atual
 
       setCardsNew(
         filtered.map(({name, id, market}, index) => (
-          <NewItemCard name={name} itemId={id} market={market} cartId={props.cartId} key={index} />
+          <NewItemCard name={name} itemId={id} market={market} cartId={props.cartId} key={index} createCards={props.createCards} />
         ))
       );
     }
@@ -65,10 +69,11 @@ export default function ModalAdd(props) {
   function filterNewItems(event) {
     // Filtra os items models
     const value = event.target.value.toLowerCase();
-    const items = document.getElementsByClassName("card-new");
+    const items = document.querySelectorAll(".card-new");
     
-    Array.from(items).forEach(item => {
+    items.forEach(item => {
       const name = item.querySelector(".card-name").innerHTML.toLowerCase();
+
       if (name.includes(value)) {
         item.style.display = "flex";
       } else {
@@ -90,12 +95,14 @@ export default function ModalAdd(props) {
 
         <div className="modal-align-cards">
           <input className="modal-input" placeholder="Bucar algo" onChange={filterNewItems}></input>
+
           {getCardsNew}
         </div>
 
         <div className="modal-btns">
           <button className='btn-mini' onClick={closeThisModal}> Fechar </button>
         </div>
+
       </div>
     </div>
   )

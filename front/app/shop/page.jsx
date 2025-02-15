@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { getUserProfile } from "@comps/supabase";
 import { useRouter } from "next/navigation";
-import NavBar from "@comps/navbar";
+import { headers } from "@comps/headers";
 import ShopBar from "@shop/shopBar";
 import ShopCard from "@shop/shopCard";
 import ModalNewCart from "@/app/comps/shop/modalNewCart";
@@ -10,40 +10,38 @@ import "../app.css"
 
 
 export default function Shop() {
-  const userProfile = getUserProfile();
   const router = useRouter();
+  let userProfile = getUserProfile();
 
   const didMount = useRef(false); // Controla a primeira renderização
   const [getCards, setCards] = useState([]);
 
   useEffect(() => {
-    checkLogin();
-  }, []);
-
-  function checkLogin() {
-    if (!userProfile?.jwt) {
-      router.push("/");
-    };
-      
     if (!didMount.current) {
       didMount.current = true; // Marcar que o componente foi montado
       return;
     };
 
-    getAllCartsFromBackEnd();
+    checkLogin();
+  }, [userProfile?.jwt]);
+
+  function checkLogin() {
+    if (!userProfile?.jwt) {
+      router.push("/")
+      
+    } else {
+      getAllCartsFromBackEnd();
+    };
   };
 
   async function getAllCartsFromBackEnd() {
-    // Busca todas as listas de compras (carts) no back
+    // Busca todas as listas de compras (carts) no backend
     if (userProfile.token) {
       const url = `http://127.0.0.1:8000/shop/${userProfile.id}/`;
 
       const formData = {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${userProfile.jwt}`,
-          Token: `Token ${userProfile.token}`
-        },
+        headers: headers
       };
 
       try {

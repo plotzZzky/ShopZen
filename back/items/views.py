@@ -4,7 +4,7 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 
 from .serializer import ItemModelSerializer, PantrySerializer
-from .models import ItemModel, Pantry
+from .models import ItemModel, Pantry, PantryItem
 from system.utils import check_profanity
 
 
@@ -17,7 +17,6 @@ class ItemModelView(ModelViewSet):
         """ Envia a lista com todos os items """
         items = self.get_queryset()
         serializer = self.serializer_class(items, many=True)
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
@@ -61,13 +60,18 @@ class ItemModelView(ModelViewSet):
 class PantryView(ModelViewSet):
     """ ClassView do items da Pantry(dispensa)"""
     serializer_class = PantrySerializer
-    queryset = Pantry.objects.all()
+    queryset = PantryItem.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         """ Retorna a lista com todos os items da dispensa """
-        query, created = Pantry.objects.get_or_create()
-        serializer = self.get_serializer(query, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            owner = kwargs["pk"]
+            query, created = Pantry.objects.get_or_create(owner=owner)
+            serializer = self.get_serializer(query.items.all(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except (KeyError, ValueError, TypeError, ObjectDoesNotExist):
+            return Response(status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         """ Atualiza um item na dispensa """
@@ -77,6 +81,7 @@ class PantryView(ModelViewSet):
             item.date = date
             item.save()
             return Response({"msg": "Item Atualizado"}, status=status.HTTP_200_OK)
+
         except (KeyError, ValueError, TypeError, ObjectDoesNotExist):
             return Response({"error": "Item Não encontrado"}, status=status.HTTP_400_BAD_REQUEST)
 

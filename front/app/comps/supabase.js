@@ -8,28 +8,10 @@ export const supaBase = createClient(
   supabaseKey,
   {
     auth: {
-      storage: {
-        getItem: (key) => {
-          if (typeof window !== 'undefined') {
-            return sessionStorage.getItem(key);
-          }
-          return null;
-        },
-        setItem: (key, value) => {
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem(key, value);
-          }
-        },
-        removeItem: (key) => {
-          if (typeof window !== 'undefined') {
-            sessionStorage.removeItem(key);
-          }
-        }
-      }
+      storage: window.sessionStorage,
     }
   }     
 );
-
 
 export function getUserProfile () {
   // Retorna o json simplificado do usuario
@@ -45,6 +27,8 @@ export function getUserProfile () {
 
       userprofile = createUserProfile(supabaseToken);
       sessionStorage.removeItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME); // remove o token do supabase
+
+      return userprofile;
     };
 
     return JSON.parse(userprofile);
@@ -77,14 +61,3 @@ function createUserProfile(supabaseToken) {
   };
 };
 
-
-export function recievePictureUrl(urlData) {
-  /**
-   * Função que busca os dados no storage do supebase, recebe um json e retorna a Url publica(string)
-   * @param {string} - Url da imagem do perfil(profile.picture) 
-   * @returns {string} - Retorna a url publica da imagem 
-   */
-  const pictureRequest = supaBase.storage.from('LibrasConnectBlob').getPublicUrl(urlData);
-  const pictureUrl = pictureRequest["data"]["publicUrl"];
-  return pictureUrl;
-};

@@ -1,6 +1,6 @@
 'use client'
 
-export default function PantryBar() {
+export default function PantryBar(props) {
 
   function filterItems(event) {
     const value = event.target.value.toLowerCase()
@@ -17,26 +17,11 @@ export default function PantryBar() {
     });
   };
 
-  function changeMarket(event) {
-    const value = event.target.value
-    const items = document.querySelectorAll(".card");
-
-    items.forEach(item => {
-      const name = item.querySelector(".card-market").innerHTML
-
-      if (name.includes(value)) {
-        item.style.display = "flex";
-      } else {
-        item.style.display = "none";
-      }
-    });
-  };
-
   return (
     <nav className="app-bar">
       <div className='app-bar-align'>
         
-        <select className='app-select' id='selectMarket' onChange={changeMarket}>
+        <select className='app-select' id='selectMarket' onChange={props.createCards}>
           <option> Mercado </option>
           <option> Farmacia </option>
           <option> PetShop </option>

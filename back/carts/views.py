@@ -61,7 +61,10 @@ class CartView(ModelViewSet):
             owner: str = request.data["owner"]
 
             cart = Cart.objects.get(pk=cart_id)
-            pantry = Pantry.objects.get(owner=owner)
+            try:
+                pantry = Pantry.objects.get(owner=owner)
+            except ObjectDoesNotExist:
+                pantry = Pantry.objects.create(owner=owner)
 
             for item in cart.items.all():
                 for _ in range(item.amount):
@@ -95,7 +98,7 @@ class CartView(ModelViewSet):
 class CartItemView(ModelViewSet):
     """ ClassView dos items do cart baseados no item model"""
     serializer_class = CartItemCreateSerializer
-    queryset = []
+    queryset = CartItem.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -104,7 +107,7 @@ class CartItemView(ModelViewSet):
             cart = Cart.objects.get(pk=cart_id)
             query = CartItem.objects.filter(cart=cart)
 
-            serializer = self.get_serializer(query, many=True)
+            serializer = CartItemReturnSerializer(query, many=True)
             return Response({"items": serializer.data, "name": cart.name}, status=status.HTTP_200_OK)
 
         except KeyError:
@@ -113,9 +116,6 @@ class CartItemView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         """ Cria um novo cart item """
         try:
-            if check_profanity(request):
-                return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
-
             serializer = CartItemCreateSerializer(data=request.data, many=False)
 
             if serializer.is_valid():
@@ -129,13 +129,23 @@ class CartItemView(ModelViewSet):
         except (TypeError, KeyError, ValueError, ObjectDoesNotExist):
             return Response({"error": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)
 
+    def partial_update(self, request, *args, **kwargs):
+        try:
+            cart_item = self.get_object()
+            serializer = CartItemCreateSerializer(cart_item, data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status.HTTP_200_OK)
+
+            return Response(status.HTTP_400_BAD_REQUEST)
+        except (KeyError, ValueError, TypeError, ObjectDoesNotExist):
+            return Response(status.HTTP_400_BAD_REQUEST)
+
     def list(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def update(self, request, *args, **kwargs):
-        return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def partial_update(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def destroy(self, request, *args, **kwargs):

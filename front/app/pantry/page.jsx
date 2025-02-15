@@ -2,9 +2,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation';
 import { getUserProfile } from '@comps/supabase';
-import NavBar from '@comps/navbar'
+
+import { headers } from '@comps/headers';
 import PantryBar from '@pantry/pantryBar'
 import PantryCard from '@pantry/pantryCard';
+import { retrievePantryFromSessionStorage, removePantryItemFromSessionStorage } from '@pantry/pantrySS';
 
 
 export default function Pantry() {
@@ -12,7 +14,10 @@ export default function Pantry() {
   const userProfile = getUserProfile();
   const didMount = useRef(false); // Controla a primeira renderização
 
+  const [getMarket, setMarket] = useState("Mercado")
+  const [pantryName, setPantryName] = useState("Carregando...");
   const [getCards, setCards] = useState([]);
+
 
   useEffect(() => {
     if (!didMount.current) {
@@ -20,61 +25,74 @@ export default function Pantry() {
       return;
     };
 
-  }, [userProfile.jwt]);
+    checkLogin();
+  }, [userProfile?.jwt]);
 
   function checkLogin() {
-    if (!userProfile.jwt) {
-      router.push("/login")
-    }
+    if (!userProfile?.jwt) {
+      router.push("/")
       
-    loadPantryItems();
+    } else {
+      loadPantryItems();
+    };
   };
 
   function loadPantryItems() {
-    const cachedPantry = sessionStorage.getItem("Pantry");
+    const cachedPantry = retrievePantryFromSessionStorage();
 
     if (cachedPantry) {
       createPantryCards(cachedPantry);
+
     } else {
       getPantryItemsFromBackEnd();
     };
   };
 
-  function getPantryItemsFromBackEnd(market) {
+  function getPantryItemsFromBackEnd() {
     // Recebe a lista de items da dispensa do usuario
     if (userProfile.token) {
-      const url = "http://127.0.0.1:8000/shop/pantry/";
+      const url = `http://127.0.0.1:8000/pantry/${userProfile.id}/`
     
       const formData = {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${userProfile.jwt}`,
-          Token: `Token ${userProfile.token}`
-        }
+        headers: headers
       };
 
       fetch(url, formData)
         .then((res) => res.json())
         .then((data) => {
+          sessionStorage.setItem("Pantry", JSON.stringify(data));
           createPantryCards(data);
         });
     };
   };
 
-  function createPantryCards(value) {
+  function createPantryCards(pantryItems) {
     // Cria os cards dos items da dispensa
-    if (value) {
+    if (pantryItems) {
+      const market = getMarket
+      const filtered = pantryItems.filter(item => item.market === market);  // Somente cria os cards do market atual
+
       setCards(
-        value.map((data, index) => (
-          <PantryCard data={data} key={index} getItems={getPantryItemsFromBackEnd} delete={() => removePantryCardFromList(index, data.id)}></PantryCard>
+        filtered.map(({item, id, date }, index) => (
+          <PantryCard
+            name={item.name}
+            market={item.market}
+            date={date}
+            validate={item.validate}
+            id={id}
+            key={index}
+            getItems={loadPantryItems}
+            delete={() => removePantryCard(index, id)}
+          />
         ))
       );
 
-      sessionStorage.setItem("Pantry", value);
+      setPantryName("Sua dispensa");
     };
   };
 
-  function removePantryCardFromList(indexToRemove, itemID) {
+  function removePantryCard(indexToRemove, itemID) {
     /**
      * Remove o pantryCard da lista
      * @param {integer} indexToRemove - index do card a ser removido
@@ -84,32 +102,16 @@ export default function Pantry() {
       prevCards.filter((card, index) => index !== indexToRemove)
     );
 
-    removePantryItemFromSessionStorage(itemID)
+    removePantryItemFromSessionStorage(itemID);
+    removePantryItemFromBackEnd(itemID);
   };
 
-  function removePantryItemFromSessionStorage(itemID) {
-    const cachedPantry = sessionStorage.getItem("Pantry")
-
-    if (cachedPantry) {
-      const jsonPantry = JSON.parse(cachedPantry);
-
-      const updatedPantry = jsonPantry.filter(item => {item.id !== itemID})
-
-      sessionStorage.setItem("Pantry", updatedPantry) // Salva a lista atualizada
-    };
-
-    removePantryItemFromBackEnd();
-  };
-
-  function removePantryItemFromBackEnd() {
-    const url = "https://127.0.0.1:8000/pantry/"
+  function removePantryItemFromBackEnd(itemID) {
+    const url = `http://127.0.0.1:8000/pantry/${itemID}/`
 
     const requestData = {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      },
+      headers: headers
     };
 
     fetch(url, requestData);
@@ -117,10 +119,10 @@ export default function Pantry() {
 
   return (
     <>
-      <PantryBar />
+      <PantryBar setMarket={setMarket} createCards={loadPantryItems} />
 
       <div className='cards'>
-        <a className="page-title"> Sua dispensa </a>
+        <a className="page-title">{pantryName}</a>
 
         {getCards}
         

@@ -37,7 +37,7 @@ class CartItemCreateSerializer(ModelSerializer):
 
 class CartItemReturnSerializer(ModelSerializer):
     item = ItemModelSerializer()
-    cart = CartSerializer()
+    cart = PrimaryKeyRelatedField(queryset=Cart.objects.all())
 
     class Meta:
             model = CartItem

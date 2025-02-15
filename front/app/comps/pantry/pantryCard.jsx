@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import { getUserProfile } from '../supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
+import { headers } from '../headers';
+import "@app/app.css"
+
 
 export default function PantryCard(props) {
-  const userProfile = getUserProfile();
-  const [getDate, setDate] = useState(props.data.date)
+  const [getDate, setDate] = useState(props.date)
 
   const ALERT = () => {
-    const validate = props.data.validate;  // Prazo de validade do produto
-    const date = new Date(props.data.date);  // Data de fabricação do produto
+    const validate = props.validate;  // Prazo de validade do produto
+    const date = new Date(props.date);  // Data de fabricação do produto
     const today = new Date();
 
     const dateOBJ = new Date(date);
@@ -19,7 +20,7 @@ export default function PantryCard(props) {
 
     const result = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-    return !props.data.date ? (
+    return !props.date ? (
       <a><FontAwesomeIcon icon={faQuestion} /></a>
     ) : result <= 0 ? (
       <a><FontAwesomeIcon icon={faCircleExclamation} /></a>
@@ -31,9 +32,9 @@ export default function PantryCard(props) {
   // Muda a data de fabricação do produto no back
   function changeDate(event) {
     const value = event.target.value;
-    const itemId = props.data.id
+    const itemId = props.id
 
-    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
+    const url = `http://127.0.0.1:8000/pantry/${itemId}/`
 
     const form = new FormData();
     form.append("date", value)
@@ -42,43 +43,22 @@ export default function PantryCard(props) {
     const requetsData = {
       method: 'PATCH',
       body: form,
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      }
+      headers: headers
     };
 
     fetch(url, requetsData);
   };
 
-  // Remove o item da despensa no back
-  function removeFromPantry() {
-    const itemId = props.data.id
-    const url = `http://127.0.0.1:8000/shop/pantry/${itemId}/`
-
-    const data = {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      }
-    };
-
-    fetch(url, data)
-    props.delete() //Função que deleta o card do item no front
-  };
-
-
   return (
     <div className='card'>
-      <a className='card-name'>{props.data.item.name}</a>
-      <a className='card-market'>{props.data.item.market}</a>
+      <a className='card-name'>{props.name}</a>
+      <a className='card-market'>{props.market}</a>
       <div className='pantry-align-btn'>
         {ALERT()}
 
         <input className='card-date' type='date' value={getDate} onChange={changeDate}></input>
         
-        <FontAwesomeIcon icon={faTrash} onClick={removeFromPantry} />
+        <FontAwesomeIcon icon={faTrash} onClick={props.delete} />
       </div>
     </div>
   )

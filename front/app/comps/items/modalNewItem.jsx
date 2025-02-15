@@ -2,7 +2,7 @@ import { useState } from "react";
 import { getUserProfile } from "../supabase";
 
 
-export default function ModalNewItem() {
+export default function ModalCreateNewItem() {
   const userProfile = getUserProfile();
 
   const [getName, setName] = useState("");

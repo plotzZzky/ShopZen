@@ -113,9 +113,11 @@ export default function NavBar(props) {
 
   const handleLogin = async () => {
     await supaBase.auth.signInWithOAuth({
-      provider: "google"
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:3000/shop",
+      },
     });
-
   };
 
   return (
