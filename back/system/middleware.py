@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
+import json
 
 from system.authenticate import validate_supabase_token
 
@@ -16,12 +17,19 @@ class AuthenticateMiddleWare:
             header_token: str = request.headers.get("Token")
             token: str = header_token.split()[1]
 
-            if validate_supabase_token(jwt, token):
-                response = self.get_response(request)
-                return response
+            user = validate_supabase_token(jwt, token)
+
+            if user:
+                try:
+                    request.owner =  user.id
+                    response = self.get_response(request)
+                    return response
+
+                except json.JSONDecodeError:
+                    return Response(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return Response(status.HTTP_401_UNAUTHORIZED)
 
         except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status.HTTP_400_BAD_REQUEST)

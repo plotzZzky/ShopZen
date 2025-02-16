@@ -19,6 +19,7 @@ class CartView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         """ Retorna a lista com todos os carts do usuario """
         try:
+            print(request)
             owner: str = kwargs["pk"]
             query = Cart.objects.filter(owner=owner)
 

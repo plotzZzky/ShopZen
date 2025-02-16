@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getUserProfile } from "../supabase";
+import { headers } from "../headers";
 
 export default function ModalNewCart(props) {
   const userProfile = getUserProfile();
@@ -11,7 +12,8 @@ export default function ModalNewCart(props) {
   };
 
   function createNewCart() {
-    const url = "http://127.0.0.1:8000/shop/"
+    const url = process.env.NEXT_PUBLIC_SHOP_URL;
+
     const market = document.getElementById("selectNewMarket").value;
 
     const form = new FormData();
@@ -22,10 +24,7 @@ export default function ModalNewCart(props) {
     const requestData = {
       method: 'POST',
       body: form,
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      },
+      headers: headers,
     }
 
     fetch(url, requestData)

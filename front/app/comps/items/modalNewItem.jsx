@@ -11,7 +11,12 @@ export default function ModalCreateNewItem() {
   function createNewItem() {
     // Cria um novo item model
     const market = document.getElementById("selectNewMarket").value;
-    const newItem = {"name": getName, "market": market, "validate": getValidate }
+    
+    const newItem = {
+      name: getName,
+      market: market,
+      validate: getValidate,
+    }
 
     closeModal();
     saveItemOnSessionStorage(newItem);
@@ -25,7 +30,7 @@ export default function ModalCreateNewItem() {
     form.append("name", getName);
     form.append("validate", getValidate);
   
-    const url = "http://127.0.0.1:8000/item/";
+    const url = process.env.NEXT_PUBLIC_ITEM_URL;
 
     const requestdata = {
       method: 'POST',

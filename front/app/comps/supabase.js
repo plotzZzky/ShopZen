@@ -13,7 +13,7 @@ export const supaBase = createClient(
   }     
 );
 
-export function getUserProfile () {
+export async function getUserProfile () {
   // Retorna o json simplificado do usuario
   if (typeof window !== "undefined") {
     let userprofile = sessionStorage.getItem("shopzen-userprofile");
@@ -25,7 +25,7 @@ export function getUserProfile () {
         return undefined;
       };
 
-      userprofile = createUserProfile(supabaseToken);
+      userprofile = await createUserProfile(supabaseToken);
       sessionStorage.removeItem(process.env.NEXT_PUBLIC_SUPABASE_TOKEN_NAME); // remove o token do supabase
 
       return userprofile;
@@ -36,7 +36,7 @@ export function getUserProfile () {
 };
 
 
-function createUserProfile(supabaseToken) {
+async function createUserProfile(supabaseToken) {
   if (typeof window !== "undefined") {
 
     if (supabaseToken) {

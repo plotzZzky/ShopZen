@@ -1,8 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation';
-import { getUserProfile } from '@comps/supabase';
-
+import { useAuth } from '@comps/authProvider';
 import { headers } from '@comps/headers';
 import PantryBar from '@pantry/pantryBar'
 import PantryCard from '@pantry/pantryCard';
@@ -10,14 +8,13 @@ import { retrievePantryFromSessionStorage, removePantryItemFromSessionStorage } 
 
 
 export default function Pantry() {
-  const router = useRouter();
-  const userProfile = getUserProfile();
+  const { userProfile, setUserProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
 
   const [getMarket, setMarket] = useState("Mercado")
   const [pantryName, setPantryName] = useState("Carregando...");
-  const [getCards, setCards] = useState([]);
 
+  const [getCards, setCards] = useState([]);
 
   useEffect(() => {
     if (!didMount.current) {
@@ -25,17 +22,11 @@ export default function Pantry() {
       return;
     };
 
-    checkLogin();
-  }, [userProfile?.jwt]);
-
-  function checkLogin() {
-    if (!userProfile?.jwt) {
-      router.push("/")
-      
-    } else {
+    if (userProfile?.jwt) {
       loadPantryItems();
     };
-  };
+
+  }, [userProfile?.jwt]);
 
   function loadPantryItems() {
     const cachedPantry = retrievePantryFromSessionStorage();
@@ -51,7 +42,7 @@ export default function Pantry() {
   function getPantryItemsFromBackEnd() {
     // Recebe a lista de items da dispensa do usuario
     if (userProfile.token) {
-      const url = `http://127.0.0.1:8000/pantry/${userProfile.id}/`
+      const url = process.env.NEXT_PUBLIC_PANTRY_URL + `${userProfile.id}/`
     
       const formData = {
         method: 'GET',
@@ -107,7 +98,7 @@ export default function Pantry() {
   };
 
   function removePantryItemFromBackEnd(itemID) {
-    const url = `http://127.0.0.1:8000/pantry/${itemID}/`
+    const url = process.env.NEXT_PUBLIC_PANTRY_URL + `${itemID}/`
 
     const requestData = {
       method: "DELETE",
@@ -118,7 +109,7 @@ export default function Pantry() {
   };
 
   return (
-    <>
+    <section>
       <PantryBar setMarket={setMarket} createCards={loadPantryItems} />
 
       <div className='cards'>
@@ -127,6 +118,6 @@ export default function Pantry() {
         {getCards}
         
       </div>
-    </>
+    </section>
   )
 }

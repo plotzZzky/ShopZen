@@ -18,7 +18,7 @@ def validate_supabase_token(user_jwt, user_token):
     hash_token: str = generate_hash(user)
 
     if hash_token == user_token:
-        return True
+        return user
 
     return False
 

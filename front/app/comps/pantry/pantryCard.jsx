@@ -34,7 +34,7 @@ export default function PantryCard(props) {
     const value = event.target.value;
     const itemId = props.id
 
-    const url = `http://127.0.0.1:8000/pantry/${itemId}/`
+    const url = process.env.NEXT_PUBLIC_PANTRY_URL + `${itemId}/`;
 
     const form = new FormData();
     form.append("date", value)

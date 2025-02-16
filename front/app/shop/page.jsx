@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
-import { getUserProfile } from "@comps/supabase";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@comps/authProvider";
 import { headers } from "@comps/headers";
 import ShopBar from "@shop/shopBar";
 import ShopCard from "@shop/shopCard";
@@ -10,10 +9,9 @@ import "../app.css"
 
 
 export default function Shop() {
-  const router = useRouter();
-  let userProfile = getUserProfile();
-
+  const { userProfile, setUserProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
+
   const [getCards, setCards] = useState([]);
 
   useEffect(() => {
@@ -22,22 +20,17 @@ export default function Shop() {
       return;
     };
 
-    checkLogin();
-  }, [userProfile?.jwt]);
-
-  function checkLogin() {
-    if (!userProfile?.jwt) {
-      router.push("/")
-      
-    } else {
+    if (userProfile?.jwt) {
       getAllCartsFromBackEnd();
     };
-  };
+
+  }, [userProfile?.jwt]);
 
   async function getAllCartsFromBackEnd() {
     // Busca todas as listas de compras (carts) no backend
-    if (userProfile.token) {
-      const url = `http://127.0.0.1:8000/shop/${userProfile.id}/`;
+    if (userProfile?.token) {
+
+      const url = process.env.NEXT_PUBLIC_SHOP_URL + `${userProfile.id}/`;
 
       const formData = {
         method: 'GET',
@@ -46,16 +39,17 @@ export default function Shop() {
 
       try {
         const responde = await fetch(url, formData);
+
         if (!responde.ok) {
           throw new Error();
-        }
+        };
 
         const data = await responde.json();
         createCartCards(data);
 
       } catch (error) {
         alert("Não foi possivel acessar o servidor!")
-      }
+      };
     };
   };
 
@@ -69,11 +63,10 @@ export default function Shop() {
     }
   };
 
-  function removeCartCard(indexToRemove, itemID) {
+  function removeCartCard(indexToRemove) {
     /**
      * Remove o cartCard do useState
      * @param {integer} indexToRemove - Index do cartCard a ser removido
-     * @param {integer} itemID - ItemID do item selecionado
      */
     setCards((prevCards) =>
       prevCards.filter((card, index) => index !== indexToRemove)
@@ -81,7 +74,7 @@ export default function Shop() {
   };
 
   return (
-    <>
+    <section>
       <ShopBar/>
 
       <div className='cards'>
@@ -92,6 +85,6 @@ export default function Shop() {
       </div>
 
       <ModalNewCart getAllCarts={getAllCartsFromBackEnd} />
-    </>
+    </section>
   )
 }

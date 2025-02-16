@@ -1,10 +1,8 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-
+import { useAuth } from "@comps/authProvider";
 import { retrieveCartFromSessionStorage, removeItemFromSessionStorage, saveCartOnSessionStorage } from "@items/itemSS";
 import { headers } from "@comps/headers";
-import { getUserProfile } from "@comps/supabase";
 import CartBar from "@cart/cartBar";
 import ModalAddItem from "@items/modalAddItem";
 import ModalCreateNewItem from "@items/modalNewItem";
@@ -13,8 +11,7 @@ import "@app/app.css"
 
 
 export default function Cart({ params }) {
-  const userProfile = getUserProfile();
-  const router = useRouter();
+  const { userProfile, setUserProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
 
   const [getCards, setCards] = useState([]);
@@ -28,17 +25,12 @@ export default function Cart({ params }) {
       return;
     };
 
-    checkLogin();
-  }, [userProfile?.jwt]);
-
-  function checkLogin() {
-    if (!userProfile?.jwt) {
-      router.push("/")
-      
-    } else {
+    if (userProfile?.jwt) {
       loadCartItems();
     };
-  };
+
+  }, [userProfile?.jwt]);
+
 
   function loadCartItems() {
     const cachedItems = retrieveCartFromSessionStorage();
@@ -54,7 +46,7 @@ export default function Cart({ params }) {
     // Busca a listas com os produtos deste carrinho no back
     if (userProfile.token && params.id) {  // Verifica se esta logado e se o CardId foi passado 
       const cartID = params.id
-      const url = `http://127.0.0.1:8000/cart/${cartID}/`;
+      const url = process.env.NEXT_PUBLIC_CART_URL + `${cartID}/`;
 
       const formnData = {
         method: 'GET',
@@ -104,7 +96,7 @@ export default function Cart({ params }) {
   };
 
   function removeItemFromBackEnd(itemID) {
-    const url = `http://127.0.0.1:8000/cart/${itemID}/`;
+    const url = process.env.NEXT_PUBLIC_CART_URL + `${itemID}/`;
 
     const requestData = {
       method: "DELETE",
@@ -115,7 +107,7 @@ export default function Cart({ params }) {
   };
 
   return (
-    <>
+    <section>
       <CartBar getCart={loadCartItems}/>
 
       <div className='cards'>
@@ -126,8 +118,7 @@ export default function Cart({ params }) {
       </div>
       
       <ModalAddItem createCards={loadCartItems} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id} />
-
       <ModalCreateNewItem setShow={setShowModal} market={getMarket}></ModalCreateNewItem>
-    </>
+    </section>
   )
 }

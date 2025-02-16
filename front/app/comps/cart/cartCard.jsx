@@ -19,7 +19,7 @@ export default function ItemCartCard(props) {
   };
   
   function changeAmountOnBack(amount) {
-    const url = `http://127.0.0.1:8000/cart/${props.itemId}/`;
+    const url = process.env.NEXT_PUBLIC_SHOP_URL + `${props.itemId}/`;
 
     const form = new FormData();
     form.append("amount", amount);

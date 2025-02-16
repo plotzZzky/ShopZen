@@ -1,4 +1,7 @@
 import { Inter } from 'next/font/google'
+
+import { AuthProvider } from './comps/authProvider'
+import AuthGuard from './comps/authGuard'
 import NavBar from './comps/navbar'
 import Footer from './comps/footer'
 import './globals.css'
@@ -11,16 +14,20 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en">
-      <NavBar />
+      <AuthProvider>
+        <body className={inter.className}>
+          <NavBar />
 
-      <body className={inter.className}>
+          <AuthGuard>
+            {children}
+          </AuthGuard>
 
-        {children}
-
-        <Footer />
-      </body>
+          <Footer />
+        </body>
+      </AuthProvider>
     </html>
   )
 }

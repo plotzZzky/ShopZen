@@ -34,7 +34,7 @@ export default function CartBar(props) {
     form.append("cartId", urlParams?.id)
     form.append("owner", userProfile?.id)
 
-    const url = "http://127.0.0.1:8000/shop/buy/"
+    const url = process.env.NEXT_PUBLIC_SHOP_BUY_URL;
 
     const requestData = {
       method: 'POST',

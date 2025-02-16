@@ -1,5 +1,5 @@
 'use client'
-import { getUserProfile } from './supabase'
+import { useAuth } from './authProvider'
 import { useRouter, usePathname } from 'next/navigation'
 import { supaBase } from './supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,10 +7,10 @@ import { faUser, faBars, faHome, faQuestion, faUsers, faCartShopping } from '@fo
 import './navbar.css'
 
 
-export default function NavBar(props) {
-  let userProfile = getUserProfile();
+export default function NavBar() {
   const router = useRouter();
   const getPath = usePathname();
+  const { userProfile, setUserProfile } = useAuth();
 
   function openResponsiveMenu() {
     // Função que abre o menu no modo responsivo

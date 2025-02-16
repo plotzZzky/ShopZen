@@ -35,7 +35,7 @@ export default function ModalAddItemToCart(props) {
     /**
      * Busca os itemModels no backEnd 
     */
-    const url = "http://127.0.0.1:8000/item/";
+    const url = process.env.NEXT_PUBLIC_ITEM_URL;
 
     const requestData = {
       method: "GET",
@@ -60,7 +60,14 @@ export default function ModalAddItemToCart(props) {
 
       setCardsNew(
         filtered.map(({name, id, market}, index) => (
-          <NewItemCard name={name} itemId={id} market={market} cartId={props.cartId} key={index} createCards={props.createCards} />
+          <NewItemCard
+            name={name}
+            itemId={id}
+            market={market}
+            cartId={props.cartId}
+            key={index}
+            createCards={props.createCards}
+          />
         ))
       );
     }

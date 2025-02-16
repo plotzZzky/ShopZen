@@ -16,7 +16,7 @@ export default function NewItemCard(props) {
   
   async function addItemToBackEnd() {
     // Salva e retorna o item do backend
-    const url = "http://127.0.0.1:8000/cart/";
+    const url = process.env.NEXT_PUBLIC_CART_URL;
 
     const form = new FormData();
     form.append("item", props.itemId);

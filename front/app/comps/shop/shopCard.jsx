@@ -19,7 +19,7 @@ export default function ShopCard(props) {
     props.delete(); // Remove o card da lista
 
     const itemID = props.id
-    const url = `http://127.0.0.1:8000/shop/${itemID}/`
+    const url =  process.env.NEXT_PUBLIC_SHOP_URL + `${itemID}/`;
 
     const requestData = {
       method: "DELETE",
