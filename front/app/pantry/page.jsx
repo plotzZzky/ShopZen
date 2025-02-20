@@ -1,19 +1,19 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@comps/authProvider';
-import { headers } from '@comps/headers';
+import { useHeaders } from '@comps/headers';
+import ordeneItemsListByName from '@comps/utils';
 import PantryBar from '@pantry/pantryBar'
 import PantryCard from '@pantry/pantryCard';
 import { retrievePantryFromSessionStorage, removePantryItemFromSessionStorage } from '@pantry/pantrySS';
 
 
 export default function Pantry() {
+  const headers = useHeaders();
   const { userProfile, setUserProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
 
-  const [getMarket, setMarket] = useState("Mercado")
   const [pantryName, setPantryName] = useState("Carregando...");
-
   const [getCards, setCards] = useState([]);
 
   useEffect(() => {
@@ -22,11 +22,11 @@ export default function Pantry() {
       return;
     };
 
-    if (userProfile?.jwt) {
+    if (userProfile?.token) {
       loadPantryItems();
     };
 
-  }, [userProfile?.jwt]);
+  }, [userProfile?.token]);
 
   function loadPantryItems() {
     const cachedPantry = retrievePantryFromSessionStorage();
@@ -42,7 +42,7 @@ export default function Pantry() {
   function getPantryItemsFromBackEnd() {
     // Recebe a lista de items da dispensa do usuario
     if (userProfile.token) {
-      const url = process.env.NEXT_PUBLIC_PANTRY_URL + `${userProfile.id}/`
+      const url = process.env.NEXT_PUBLIC_PANTRY_URL;
     
       const formData = {
         method: 'GET',
@@ -61,11 +61,12 @@ export default function Pantry() {
   function createPantryCards(pantryItems) {
     // Cria os cards dos items da dispensa
     if (pantryItems) {
-      const market = getMarket
-      const filtered = pantryItems.filter(item => item.market === market);  // Somente cria os cards do market atual
+      const market = document.getElementById("selectMarket").value // Necessario para evitar o delay de renderização do useState
+      const filtered = pantryItems.filter(item => item.item.market === market);  // Somente cria os cards do market atual
+      const ordened = ordeneItemsListByName(filtered);
 
       setCards(
-        filtered.map(({item, id, date }, index) => (
+        ordened.map(({item, id, date }, index) => (
           <PantryCard
             name={item.name}
             market={item.market}
@@ -110,7 +111,7 @@ export default function Pantry() {
 
   return (
     <section>
-      <PantryBar setMarket={setMarket} createCards={loadPantryItems} />
+      <PantryBar createCards={loadPantryItems} />
 
       <div className='cards'>
         <a className="page-title">{pantryName}</a>

@@ -4,13 +4,14 @@ import { useParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import { headers } from '../headers';
+import { useHeaders } from '../headers';
 import '@comps/navbar.css'
 
 
 export default function CartBar(props) {
   const userProfile = getUserProfile();
   const urlParams = useParams();
+  const headers = useHeaders();
 
   function filterItems(event) {
     // Filtra os cards pelo nome
@@ -50,11 +51,11 @@ export default function CartBar(props) {
   };
 
   function showModalAdd() {
-    document.getElementById('ModalAdd').style.display = 'block'
+    props.showModalAddItem(true);
   };
 
   function showModalNew() {
-    document.getElementById('ModalNew').style.display = 'block'
+    props.showModalNewItem(true);
   };
 
   return (

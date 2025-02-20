@@ -1,6 +1,8 @@
 'use client'
+import { useState } from "react";
 
 export default function PantryBar(props) {
+  const [market, setMarket] = useState("Mercado");
 
   function filterItems(event) {
     const value = event.target.value.toLowerCase()
@@ -17,14 +19,15 @@ export default function PantryBar(props) {
     });
   };
 
+
   return (
     <nav className="app-bar">
       <div className='app-bar-align'>
         
-        <select className='app-select' id='selectMarket' onChange={props.createCards}>
-          <option> Mercado </option>
-          <option> Farmacia </option>
-          <option> PetShop </option>
+        <select className='app-select' id='selectMarket' value={market} onChange={props.createCards}>
+          <option value={"Mercado"}>Mercado</option>
+          <option value={"Farmácia"}>Farmácia</option>
+          <option value={"PetShop"}>PetShop</option>
         </select>
 
         <input type='text' className='app-filter' onChange={filterItems} placeholder='Buscar produto na lista'></input>

@@ -16,11 +16,10 @@ class CartView(ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-    def retrieve(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         """ Retorna a lista com todos os carts do usuario """
         try:
-            print(request)
-            owner: str = kwargs["pk"]
+            owner: str = request.owner
             query = Cart.objects.filter(owner=owner)
 
             if not query:
@@ -43,7 +42,11 @@ class CartView(ModelViewSet):
             if check_profanity(request):
                 return Response("Termo proibido na solicitação!", status=status.HTTP_406_NOT_ACCEPTABLE)
 
-            serializer = CartSerializer(data=request.data, many=False)
+            data = request.data.copy() # cria uma copia para poder adicionar o owner
+            data["owner"] = request.owner
+
+            serializer = CartSerializer(data=data, many=False)
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -59,7 +62,7 @@ class CartView(ModelViewSet):
         """ Compra todos os items do cart """
         try:
             cart_id: int = request.data['cartId']
-            owner: str = request.data["owner"]
+            owner: str = request.owner
 
             cart = Cart.objects.get(pk=cart_id)
             try:
@@ -86,7 +89,7 @@ class CartView(ModelViewSet):
         except KeyError:
             return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def list(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def update(self, request, *args, **kwargs):
@@ -143,11 +146,18 @@ class CartItemView(ModelViewSet):
         except (KeyError, ValueError, TypeError, ObjectDoesNotExist):
             return Response(status.HTTP_400_BAD_REQUEST)
 
+    def destroy(self, request, *args, **kwargs):
+        item_id = kwargs['pk']
+        item = CartItem.objects.get(pk=item_id)
+
+        if item:
+            item.delete()
+            return Response(status.HTTP_200_OK)
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
     def list(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def update(self, request, *args, **kwargs):
-        return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def destroy(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)

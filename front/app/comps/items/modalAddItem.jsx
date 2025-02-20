@@ -1,21 +1,18 @@
-import { useState, useEffect, useRef } from "react";
-import NewItemCard from "@items/NewItemCard";
-import { headers } from "../headers";
+import { useState, useEffect } from "react";
+import NewItemCard from "@/app/comps/items/newItemCard";
+import ordeneItemsListByName from "@comps/utils"
+import { useHeaders } from "../headers";
 
 
 export default function ModalAddItemToCart(props) {
-  const didMount = useRef(false); // Controla a primeira renderização
+  const headers = useHeaders();
 
   const [getCardsNew, setCardsNew] = useState([]);
 
   useEffect(() => {
-    if (!didMount.current) {
-      didMount.current = true; // Marcar que o componente foi montado
-      return;
-    };
 
     loadItemsModel();
-  }, []);
+  }, [props.show]);
 
   async function loadItemsModel() {
     /**
@@ -53,13 +50,14 @@ export default function ModalAddItemToCart(props) {
 
   function createCartItemCards(items) {
     // Cria os cards com os items models
-    const market = props.market
-    
     if (items) {
+      const market = props.market
+
       const filtered = items.filter(item => item.market === market);  // Somente cria os cards do market atual
+      const ordened = ordeneItemsListByName(filtered)
 
       setCardsNew(
-        filtered.map(({name, id, market}, index) => (
+        ordened.map(({name, id, market}, index) => (
           <NewItemCard
             name={name}
             itemId={id}
@@ -85,32 +83,32 @@ export default function ModalAddItemToCart(props) {
         item.style.display = "flex";
       } else {
         item.style.display = "none";
-      }
+      };
     });
   };
 
   function closeThisModal() {
-    document.getElementById("ModalAdd").style.display = 'none';
     props.setShow(false);
   };
 
+  if (props.show) {
+    return (
+      <div className='modal-background' id="ModalAdd" onClick={closeThisModal}>
+        <div className='modal-add' onClick={e => e.stopPropagation()}>
+          <a className="modal-title"> Items para adicionar </a>
 
-  return (
-    <div className='modal-background' id="ModalAdd" onClick={closeThisModal}>
-      <div className='modal-add' onClick={e => e.stopPropagation()}>
-        <a className="modal-title"> Items para adicionar </a>
+          <div className="modal-align-cards">
+            <input className="modal-input" placeholder="Bucar algo" onChange={filterNewItems}></input>
 
-        <div className="modal-align-cards">
-          <input className="modal-input" placeholder="Bucar algo" onChange={filterNewItems}></input>
+            {getCardsNew}
+          </div>
 
-          {getCardsNew}
+          <div className="modal-btns">
+            <button className='btn-mini' onClick={closeThisModal}> Fechar </button>
+          </div>
+
         </div>
-
-        <div className="modal-btns">
-          <button className='btn-mini' onClick={closeThisModal}> Fechar </button>
-        </div>
-
       </div>
-    </div>
-  )
+    )
+  }
 }

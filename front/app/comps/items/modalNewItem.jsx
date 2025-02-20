@@ -1,29 +1,23 @@
 import { useState } from "react";
-import { getUserProfile } from "../supabase";
+import { useHeaders } from "../headers";
 
 
-export default function ModalCreateNewItem() {
-  const userProfile = getUserProfile();
+export default function ModalCreateNewItem(props) {
+  const headers = useHeaders();
 
   const [getName, setName] = useState("");
   const [getValidate, setValidate] = useState("");
+  const [market, setMarket] = useState("Mercado");
 
-  function createNewItem() {
+  async function createNewItem() {
     // Cria um novo item model
-    const market = document.getElementById("selectNewMarket").value;
-    
-    const newItem = {
-      name: getName,
-      market: market,
-      validate: getValidate,
-    }
+    const newItem = await createItemOnBackEnd();
 
-    closeModal();
     saveItemOnSessionStorage(newItem);
-    createItemOnBackEnd(market);
+    closeModal();
   };
 
-  function createItemOnBackEnd(market) {
+  async function createItemOnBackEnd() {
     // cria um no itemmodel para compras
     const form = new FormData();
     form.append("market", market);
@@ -35,13 +29,15 @@ export default function ModalCreateNewItem() {
     const requestdata = {
       method: 'POST',
       body: form,
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      }
+      headers: headers
     };
   
-    fetch(url, requestdata)
+    const response = await fetch(url, requestdata);
+    
+    if (response.ok) {
+      const newItem = await response.json();
+      return newItem;
+    }
   };
 
   function saveItemOnSessionStorage(value) {
@@ -67,33 +63,40 @@ export default function ModalCreateNewItem() {
     setValidate(value);
   };
 
-  function closeModal() {
-    document.getElementById("ModalNew").style.display = 'none';
+  function handlingMarket(event) {
+    const value = event.target.value;
+    setMarket(value);
   };
 
-  return (
-    <div className='modal-background' id="ModalNew" onClick={closeModal}>
-      <div className='modal' onClick={e => e.stopPropagation()}>
-        
-        <a className="modal-title"> Criar novo item: </a>
+  function closeModal() {
+    props.setShow(false);
+  };
 
-        <div className="modal-align">
-          <input type='text' value={getName} onChange={handlingName} placeholder="Digite o nome do produto"></input>
-          <input type='number' min={0} value={getValidate} onChange={handlingValidate} placeholder="Digite a validade do produto"></input>
+  if (props.show) {
+    return (
+      <div className='modal-background' id="ModalNew" onClick={closeModal}>
+        <div className='modal' onClick={e => e.stopPropagation()}>
+          
+          <a className="modal-title"> Criar novo item: </a>
 
-          <select id="selectNewMarket">
-            <option> Mercado </option>
-            <option> Farmacia </option>
-            <option> PetShop </option>
-          </select>
+          <div className="modal-align">
+            <input type='text' value={getName} onChange={handlingName} placeholder="Digite o nome do produto"></input>
+            <input type='number' min={0} value={getValidate} onChange={handlingValidate} placeholder="Digite a validade do produto"></input>
 
-        </div>
-        
-        <div className="modal-btns">
-          <button onClick={createNewItem}> Criar </button>
-          <button onClick={closeModal}> Fechar </button>
+            <select value={market} id="selectNewMarket" onChange={e => handlingMarket(e)}>
+              <option value={"Mercado"}> Mercado </option>
+              <option value={"Farmácia"}> Farmácia </option>
+              <option value={"PetShop"}> PetShop </option>
+            </select>
+
+          </div>
+          
+          <div className="modal-btns">
+            <button onClick={createNewItem}> Criar </button>
+            <button onClick={closeModal}> Fechar </button>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 }

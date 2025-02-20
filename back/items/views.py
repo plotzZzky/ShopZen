@@ -33,7 +33,8 @@ class ItemModelView(ModelViewSet):
                 item, created = ItemModel.objects.get_or_create(market=market, name=name)
 
                 if created:
-                    return Response(status=status.HTTP_201_CREATED)
+                    serializer = ItemModelSerializer(item)
+                    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
                 return Response("Item já existe", status=status.HTTP_200_OK)
 
@@ -62,10 +63,10 @@ class PantryView(ModelViewSet):
     serializer_class = PantrySerializer
     queryset = PantryItem.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         """ Retorna a lista com todos os items da dispensa """
         try:
-            owner = kwargs["pk"]
+            owner: str = request.owner
             query, created = Pantry.objects.get_or_create(owner=owner)
             serializer = self.get_serializer(query.items.all(), many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -94,7 +95,7 @@ class PantryView(ModelViewSet):
         except KeyError:
             return Response(status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def partial_update(self, request, *args, **kwargs):

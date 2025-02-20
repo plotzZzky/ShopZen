@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@comps/authProvider";
-import { headers } from "@comps/headers";
+import  { useHeaders } from "@comps/headers"
 import ShopBar from "@shop/shopBar";
 import ShopCard from "@shop/shopCard";
 import ModalNewCart from "@/app/comps/shop/modalNewCart";
@@ -9,8 +9,11 @@ import "../app.css"
 
 
 export default function Shop() {
-  const { userProfile, setUserProfile } = useAuth();
+  const headers = useHeaders();
+  const { userProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
+
+  const [showModal, setShowModal] = useState(false);
 
   const [getCards, setCards] = useState([]);
 
@@ -20,25 +23,24 @@ export default function Shop() {
       return;
     };
 
-    if (userProfile?.jwt) {
+    if (userProfile?.token) {
       getAllCartsFromBackEnd();
     };
 
-  }, [userProfile?.jwt]);
+  }, [userProfile?.token]);
 
   async function getAllCartsFromBackEnd() {
     // Busca todas as listas de compras (carts) no backend
     if (userProfile?.token) {
+      const url = process.env.NEXT_PUBLIC_SHOP_URL;
 
-      const url = process.env.NEXT_PUBLIC_SHOP_URL + `${userProfile.id}/`;
-
-      const formData = {
+      const requestData = {
         method: 'GET',
         headers: headers
       };
 
       try {
-        const responde = await fetch(url, formData);
+        const responde = await fetch(url, requestData);
 
         if (!responde.ok) {
           throw new Error();
@@ -75,7 +77,7 @@ export default function Shop() {
 
   return (
     <section>
-      <ShopBar/>
+      <ShopBar showModal={setShowModal} />
 
       <div className='cards'>
         <a className="page-title"> Suas listas de compras </a>
@@ -84,7 +86,7 @@ export default function Shop() {
 
       </div>
 
-      <ModalNewCart getAllCarts={getAllCartsFromBackEnd} />
+      <ModalNewCart getAllCarts={getAllCartsFromBackEnd} show={showModal} setShow={setShowModal} />
     </section>
   )
 }

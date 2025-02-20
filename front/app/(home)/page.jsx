@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import { getUserProfile } from '@comps/supabase';
-import NavBar from '@comps/navbar';
+import { handleLogin } from '@comps/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
@@ -33,13 +33,6 @@ export default function Home() {
     },
   ];
 
-  const BENEFITS = [
-    '- Interface intuitiva que simplifica a criação e gestão de listas de compras.',
-    '- Design responsivo que funciona perfeitamente em dispositivos móveis e desktops.',
-    '- Contribua para um consumo mais consciente ao planejar suas compras com antecedência.',
-    '- Equipe de suporte dedicada para ajudar em qualquer dúvida ou problema.'
-  ];
-
   const faqItems = () => {
     // Cria os cards dos items da faq
     return FAQ.map(({question, answer}, index) => (
@@ -50,41 +43,22 @@ export default function Home() {
     ))
   };
 
-  const BENEFITSCARDS = () => {
-    // Cria os cards dos beneficios de usar a shopzen
-    return BENEFITS.map((value, index) => (
-      <p key={index}> {value} </p>
-    ))
-  };
-
-  function goToLogin() {
-    // Função para redirecionar a pagina de login
-    if (userProfile.jwt) {
-      router.push("/market");
-    } else {
-      router.push("/login");
-    };
-  };
 
   return (
     <>
-      <NavBar />
-
       <section id='Start'>
         <h1 className='big-title'> ShopZen <FontAwesomeIcon icon={faCartShopping} className='market-icon' /> </h1>
         <h2 className='subtitle'> Simplifique sua vida com uma lista de compras online!</h2>
 
         <div className='home-align-btns'>
-          <button className="btn-home" onClick={goToLogin}> Começar! </button>
+          <button className="btn-home" onClick={handleLogin}> Começar! </button>
         </div>
       </section>
 
       <section id='About'>
         <h1> Sobre nós... </h1>
         <h2> Somos uma solução completa para listas de compras online. Com design intuitivo e funcionalidades poderosas, o ShopZen torna o processo de compras mais eficiente e organizado. Crie, compartilhe e gerencie suas listas de compras de maneira simples e conveniente.</h2>
-        <h1> Por que usar... </h1>
-
-        {BENEFITSCARDS()}
+        <h2> ShopZen tambem ofere suporte a Dispensa, onde você poderá acompanhar a validade do seus items.</h2>
       </section>
 
       <section id='Faq'>

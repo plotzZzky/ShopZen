@@ -4,7 +4,7 @@ import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import '@comps/navbar.css'
 
 
-export default function ShopBar() {
+export default function ShopBar(props) {
 
   function filterItems(event) {
     // filter cards in list by name
@@ -23,7 +23,7 @@ export default function ShopBar() {
   };
 
   function showModalNew() {
-    document.getElementById('ModalNewCart').style.display = 'block';
+    props.showModal(true);
   };
 
   return (

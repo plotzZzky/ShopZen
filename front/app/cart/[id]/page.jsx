@@ -2,22 +2,26 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@comps/authProvider";
 import { retrieveCartFromSessionStorage, removeItemFromSessionStorage, saveCartOnSessionStorage } from "@items/itemSS";
-import { headers } from "@comps/headers";
+import { useHeaders } from "@comps/headers";
+import ordeneItemsListByName from "@comps/utils"
 import CartBar from "@cart/cartBar";
 import ModalAddItem from "@items/modalAddItem";
 import ModalCreateNewItem from "@items/modalNewItem";
-import ItemCardCart from "@cart/cartCard";
+import ItemCardCart from "@/app/comps/cart/itemCartCard";
 import "@app/app.css"
 
 
 export default function Cart({ params }) {
   const { userProfile, setUserProfile } = useAuth();
   const didMount = useRef(false); // Controla a primeira renderização
+  const headers = useHeaders();
 
   const [getCards, setCards] = useState([]);
   const [getMarket, setMarket] = useState("Mercado");
-  const [getShowModal, setShowModal] = useState(false)
   const [getCartName, setCartName] = useState("Carregando...");
+
+  const [getShowModalAddItem, setShowModalAddItem] = useState(false);
+  const [getShowModalNewItem, setShowModalNewItem] = useState(false);
 
   useEffect(() => {
     if (!didMount.current) {
@@ -25,18 +29,18 @@ export default function Cart({ params }) {
       return;
     };
 
-    if (userProfile?.jwt) {
+    if (userProfile?.token) {
       loadCartItems();
     };
 
-  }, [userProfile?.jwt]);
+  }, [userProfile?.token]);
 
 
   function loadCartItems() {
-    const cachedItems = retrieveCartFromSessionStorage();
+    const cachedItems = retrieveCartFromSessionStorage(params.id);
 
     if (cachedItems) {
-      createItemsCards(JSON.parse(cachedItems));
+      createItemsCards(cachedItems);
     } else {
       getItemsFromBackEnd();
     };
@@ -57,16 +61,19 @@ export default function Cart({ params }) {
         .then((res) => res.json())
         .then((data) => {
           createItemsCards(data);
-          saveCartOnSessionStorage(data.items, cartID)
+          saveCartOnSessionStorage(data, cartID)
         });
     }
   };
 
   function createItemsCards(cart) {
     if (cart.items) {
+      const ordened = cart.items.length > 1 ? ordeneItemsListByName(cart.items) : cart.items;
+
       setCards(
-        cart.items.map(({item, amount, cart, id,}, index) => (
+        ordened.map(({item, amount, cart, id,}, index) => (
           <ItemCardCart
+            key={index}
             name={item.name}
             amount={amount}
             cartId={cart} 
@@ -76,11 +83,12 @@ export default function Cart({ params }) {
           />
         ))
       );
+    };
 
-      setCartName(cart.name)
+    if (cart.name) {
+      setCartName(cart.name);
     };
   };
-
 
   function removeItemCard(indexToRemove, itemID) {
     /**
@@ -108,7 +116,11 @@ export default function Cart({ params }) {
 
   return (
     <section>
-      <CartBar getCart={loadCartItems}/>
+      <CartBar
+        getCart={loadCartItems}
+        showModalAddItem={setShowModalAddItem}
+        showModalNewItem={setShowModalNewItem}
+      />
 
       <div className='cards'>
         <a className="page-title">{getCartName} </a>
@@ -117,8 +129,8 @@ export default function Cart({ params }) {
         
       </div>
       
-      <ModalAddItem createCards={loadCartItems} show={getShowModal} setShow={setShowModal} market={getMarket} cartId={params.id} />
-      <ModalCreateNewItem setShow={setShowModal} market={getMarket}></ModalCreateNewItem>
+      <ModalAddItem createCards={loadCartItems} show={getShowModalAddItem} setShow={setShowModalAddItem} market={getMarket} cartId={params.id} />
+      <ModalCreateNewItem show={getShowModalNewItem} setShow={setShowModalNewItem}/>
     </section>
   )
 }

@@ -1,8 +1,9 @@
-import { createNewItemOnSessionSorage } from '../items/itemSS';
-import { headers } from '../headers';
+import { createNewItemOnSessionSorage } from './itemSS';
+import { useHeaders } from '../headers';
 
 
 export default function NewItemCard(props) {
+  const headers = useHeaders();
 
   async function addItemToCart() {
     // Recupera o carrinho do sessionStorage e faz o parse

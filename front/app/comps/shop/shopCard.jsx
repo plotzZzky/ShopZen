@@ -1,10 +1,10 @@
 import { useRouter } from 'next/navigation';
-import { getUserProfile } from '../supabase';
+import { useHeaders } from '../headers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 export default function ShopCard(props) {
-  const userProfile = getUserProfile();
+  const headers = useHeaders();
   const router = useRouter();
 
   function showCartPage() {
@@ -23,10 +23,7 @@ export default function ShopCard(props) {
 
     const requestData = {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${userProfile.jwt}`,
-        Token: `Token ${userProfile.token}`
-      }
+      headers: headers
     };
 
     await fetch(url, requestData);

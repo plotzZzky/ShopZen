@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
-import { headers } from '../headers';
+import { useHeaders } from '../headers';
 import "@app/app.css"
 
 
 export default function PantryCard(props) {
-  const [getDate, setDate] = useState(props.date)
+  const headers = useHeaders();
+  const [getDate, setDate] = useState(props.date || "");
 
   const ALERT = () => {
     const validate = props.validate;  // Prazo de validade do produto

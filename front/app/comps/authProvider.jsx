@@ -13,8 +13,9 @@ export const AuthProvider = ({ children }) => {
         const token = await getUserProfile();
 
         if (token) {
-          setUserProfile({ jwt: token });
-        }
+          setUserProfile(token);
+        };
+        
       } catch (error) {
         console.error('Erro ao obter o perfil do usuário:', error);
       }

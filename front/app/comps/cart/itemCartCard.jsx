@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
-import { headers } from '../headers';
+import { useHeaders } from '../headers';
 import { changeAmountOnSessionSorage } from '../items/itemSS';
 
 
 export default function ItemCartCard(props) {
-  const [getAmount, setAmount] = useState();
+  const headers = useHeaders();
+  const [getAmount, setAmount] = useState(0);
 
   function changeAmount(event) {
     const amount = event.target.value;
     setAmount(amount)
 
-    if (amount <= 0) {
+    if (amount === "0") {
       props.delete();
     };
 

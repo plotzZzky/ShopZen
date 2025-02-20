@@ -1,7 +1,7 @@
 'use client'
 import { useAuth } from './authProvider'
 import { useRouter, usePathname } from 'next/navigation'
-import { supaBase } from './supabase'
+import { handleLogin } from './supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faHome, faQuestion, faUsers, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import './navbar.css'
@@ -10,7 +10,7 @@ import './navbar.css'
 export default function NavBar() {
   const router = useRouter();
   const getPath = usePathname();
-  const { userProfile, setUserProfile } = useAuth();
+  const { userProfile } = useAuth();
 
   function openResponsiveMenu() {
     // Função que abre o menu no modo responsivo
@@ -20,7 +20,7 @@ export default function NavBar() {
       navbar.classList.add("responsive");
     } else {
       navbar.className = "menu";
-    }
+    };
   };
 
   function closeResponsiveMenu() {
@@ -47,7 +47,7 @@ export default function NavBar() {
   };
 
   const LOGIN = () => {
-    return !userProfile?.jwt? (
+    return !userProfile?.token? (
       <div style={{justifyContent: 'flex-end'}}>
         <span onClick={handleLogin}>
           <FontAwesomeIcon icon={faUser}/> Entrar
@@ -57,7 +57,7 @@ export default function NavBar() {
   };
 
   const Shopping = () => {
-    return userProfile?.jwt? (
+    return userProfile?.token? (
       <span onClick={goShopping}>
         <FontAwesomeIcon icon={faCartShopping}/> Compras
       </span>
@@ -65,7 +65,7 @@ export default function NavBar() {
   }
 
   const Pantry = () => {
-    return userProfile?.jwt? (
+    return userProfile?.token? (
       <span onClick={goPantry}>
         <FontAwesomeIcon icon={faUser}/> Dispensa
       </span>
@@ -96,7 +96,7 @@ export default function NavBar() {
     /** Função generica para redirecionamento, se token for null redireciona para /login do contrario para a pagina passada como parametro
     * @param {string} 
     **/
-    if (userProfile?.jwt && getPath !== nextUrl) {
+    if (userProfile?.token && getPath !== nextUrl) {
       router.push(nextUrl);
     };
 
@@ -109,15 +109,6 @@ export default function NavBar() {
 
   function goPantry() {
     genericGoToUrl("/pantry");
-  };
-
-  const handleLogin = async () => {
-    await supaBase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "http://localhost:3000/shop",
-      },
-    });
   };
 
   return (

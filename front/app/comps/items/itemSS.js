@@ -39,11 +39,11 @@ export function removeItemFromSessionStorage(cartID, itemID) {
    * Remove o item selecionado do sessionStorage
    * @param {integer} itemID - O ID do item a ser removido
    */
-  const cachedItems = retrieveCartFromSessionStorage(cartID);
+  const cart = retrieveCartFromSessionStorage(cartID);
 
-  if (cachedItems) {
+  if (cart) {
 
-    const updatedItems = cachedItems.items.filter(item => item.id !== itemID); // Retorna a lista com todos os items exceto o selecionado
+    const updatedItems = cart.items.filter(item => item.id !== itemID); // Retorna a lista com todos os items exceto o selecionado
 
     cart.items = updatedItems; // Substitui a lista antiga pela atualizada
 
@@ -60,7 +60,7 @@ export function retrieveCartFromSessionStorage(cartID) {
   if (cartID) {
     const cartName = `Cart ${cartID}`
     const cart = sessionStorage.getItem(cartName);
-    let parsedCart = cart ? JSON.parse(cart) : [];
+    let parsedCart = JSON.parse(cart);
 
     return parsedCart
   };
