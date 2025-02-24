@@ -2,14 +2,12 @@ import { useState } from 'react'
 import { savePantryItemOnSessionStorage } from './pantrySS';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
-
 import { useHeaders } from '../headers';
-import "@app/app.css"
 
 
 export default function PantryCard(props) {
   const headers = useHeaders();
-  const [getDate, setDate] = useState(props.date || "");
+  const [getDate, setDate] = useState(props.date || " ");
 
   const validateAlert = () => {
     const validate = props.validate;  // Prazo de validade do produto
@@ -58,6 +56,7 @@ export default function PantryCard(props) {
     fetch(url, requetsData);
   };
 
+
   return (
     <div className='card'>
       <a className='card-name'>{props.name}</a>
@@ -65,7 +64,7 @@ export default function PantryCard(props) {
       <div className='pantry-align-btn'>
         {validateAlert()}
 
-        <input className='card-date' type='date' value={getDate} onChange={changeDateOnSessionStorage}></input>
+        <input className='card-date' type='date' value={getDate} onChange={changeDateOnSessionStorage} />
         
         <FontAwesomeIcon icon={faTrash} onClick={props.delete} />
       </div>

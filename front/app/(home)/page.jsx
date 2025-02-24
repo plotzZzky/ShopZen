@@ -1,13 +1,13 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { getUserProfile } from '@comps/supabase';
+import { useAuth } from '@comps/authProvider';
 import { handleLogin } from '@comps/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Home() {
-  const userProfile = getUserProfile();
+  const { userProfile, setUserProfile } = useAuth();
   const router = useRouter();
 
   const FAQ = [
@@ -43,6 +43,14 @@ export default function Home() {
     ))
   };
 
+  function goLogin() {
+    if (userProfile) {
+      router.push("/shop")
+    } else {
+      handleLogin()
+    };
+  };
+
 
   return (
     <>
@@ -51,7 +59,7 @@ export default function Home() {
         <h2 className='subtitle'> Simplifique sua vida com uma lista de compras online!</h2>
 
         <div className='home-align-btns'>
-          <button className="btn-home" onClick={handleLogin}> Começar! </button>
+          <button className="btn-home" onClick={goLogin}> Começar! </button>
         </div>
       </section>
 

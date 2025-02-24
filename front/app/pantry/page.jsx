@@ -6,6 +6,7 @@ import ordeneItemsListByName from '@comps/utils';
 import PantryBar from '@pantry/pantryBar'
 import PantryCard from '@pantry/pantryCard';
 import { retrievePantryFromSessionStorage, removePantryItemFromSessionStorage } from '@pantry/pantrySS';
+import "@app/app.css"
 
 
 export default function Pantry() {
