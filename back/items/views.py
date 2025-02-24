@@ -74,7 +74,7 @@ class PantryView(ModelViewSet):
         except (KeyError, ValueError, TypeError, ObjectDoesNotExist):
             return Response(status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, *args, **kwargs):
+    def partial_update(self, request, *args, **kwargs):
         """ Atualiza um item na dispensa """
         try:
             date = request.data['date']
@@ -98,7 +98,7 @@ class PantryView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def partial_update(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def create(self, request, *args, **kwargs):

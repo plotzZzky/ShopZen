@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { savePantryItemOnSessionStorage } from './pantrySS';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faExclamation, faCircleExclamation, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,7 +11,7 @@ export default function PantryCard(props) {
   const headers = useHeaders();
   const [getDate, setDate] = useState(props.date || "");
 
-  const ALERT = () => {
+  const validateAlert = () => {
     const validate = props.validate;  // Prazo de validade do produto
     const date = new Date(props.date);  // Data de fabricação do produto
     const today = new Date();
@@ -28,11 +29,18 @@ export default function PantryCard(props) {
     ) : result <= 7 ? (
       <a>{result} dias <FontAwesomeIcon icon={faExclamation} /></a>
     ) : (null)
-  }
+  };
 
-  // Muda a data de fabricação do produto no back
-  function changeDate(event) {
-    const value = event.target.value;
+  function changeDateOnSessionStorage(event) {
+    const itemID = props.id;
+    const newDate = event.target.value;
+
+    savePantryItemOnSessionStorage(itemID, newDate);
+    changeDateOnBackEnd(newDate);
+  };
+
+  function changeDateOnBackEnd(value) {
+    // Muda a data de fabricação do produto no back
     const itemId = props.id
 
     const url = process.env.NEXT_PUBLIC_PANTRY_URL + `${itemId}/`;
@@ -55,9 +63,9 @@ export default function PantryCard(props) {
       <a className='card-name'>{props.name}</a>
       <a className='card-market'>{props.market}</a>
       <div className='pantry-align-btn'>
-        {ALERT()}
+        {validateAlert()}
 
-        <input className='card-date' type='date' value={getDate} onChange={changeDate}></input>
+        <input className='card-date' type='date' value={getDate} onChange={changeDateOnSessionStorage}></input>
         
         <FontAwesomeIcon icon={faTrash} onClick={props.delete} />
       </div>

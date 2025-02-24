@@ -60,7 +60,7 @@ export default function ModalNewCart(props) {
 
               <select value={cartMarket} id="selectNewMarket" onChange={e => handlingMarket(e)}>
                 <option value={"Mercado"}>Mercado</option>
-                <option value={"Farmácia"}>Farmacia</option>
+                <option value={"Farmácia"}>Farmácia</option>
                 <option value={"PetShop"}>PetShop</option>
               </select>
             </div>

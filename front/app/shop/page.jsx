@@ -55,10 +55,10 @@ export default function Shop() {
     };
   };
 
-  function createCartCards(value) {
-    if (value) {
+  function createCartCards(shopItems) {
+    if (shopItems) {
       setCards(
-        value.map(({name, id}, index) => (
+        shopItems.map(({name, id}, index) => (
           <ShopCard key={index} name={name} id={id} delete={() => removeCartCard(index)}></ShopCard>
         ))
       );

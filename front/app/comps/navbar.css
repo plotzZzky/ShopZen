@@ -30,18 +30,18 @@ nav div {
 
 nav span {
   padding: 1vh 1vw;
-  margin: 0 .5vw;
+  margin: 0 1vw;
   text-align: center;
   color: var(--color_accent);
   font-weight: bold;
-  font-size: clamp(0.7em, 2vw, 1em);
+  font-size: clamp(0.8em, 2vw, 1em);
   cursor: pointer;
   position: relative;
 }
 
 nav span * {
   color: var(--color_accent);
-  font-size: clamp(0.7em, 2vw, 1em);
+  font-size: clamp(1.1em, 2vw, 1.2em);
 }
 
 nav span::before {
@@ -52,7 +52,7 @@ nav span::before {
   transition: all .2s ease-in-out;
   opacity: 0;
   z-index: -1;
-  border-bottom: 3px solid var(--color_accent);
+  border-bottom: 2px solid var(--color_accent);
 }
 
 nav span:hover::before {
@@ -111,7 +111,7 @@ option {
   vertical-align: baseline;
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 100px) {
   .navbar-align {
     width: 100%;
     justify-content: left;

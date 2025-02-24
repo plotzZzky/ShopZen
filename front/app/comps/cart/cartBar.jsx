@@ -1,6 +1,7 @@
 'use client'
 import { getUserProfile } from '../supabase';
 import { useParams } from 'next/navigation';
+import { saveNewPantryOnSessionStorage } from '@pantry/pantrySS';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons'
 
@@ -31,11 +32,11 @@ export default function CartBar(props) {
 
   function buyList() {
     // Adiciona os items da lista a dispensa e remove do carrinho
+    const url = process.env.NEXT_PUBLIC_SHOP_BUY_URL;
+
     const form = new FormData();
     form.append("cartId", urlParams?.id)
     form.append("owner", userProfile?.id)
-
-    const url = process.env.NEXT_PUBLIC_SHOP_BUY_URL;
 
     const requestData = {
       method: 'POST',
@@ -45,7 +46,8 @@ export default function CartBar(props) {
 
     fetch(url, requestData)
       .then((res) => res.json())
-      .then(() => {
+      .then((data) => {
+        saveNewPantryOnSessionStorage(data)
         props.getCart();
       })
   };

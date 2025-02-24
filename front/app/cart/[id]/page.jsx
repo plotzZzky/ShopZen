@@ -49,7 +49,7 @@ export default function Cart({ params }) {
   function getItemsFromBackEnd() {
     // Busca a listas com os produtos deste carrinho no back
     if (userProfile.token && params.id) {  // Verifica se esta logado e se o CardId foi passado 
-      const cartID = params.id
+      const cartID = params.id;
       const url = process.env.NEXT_PUBLIC_CART_URL + `${cartID}/`;
 
       const formnData = {
@@ -61,8 +61,8 @@ export default function Cart({ params }) {
         .then((res) => res.json())
         .then((data) => {
           createItemsCards(data);
-          saveCartOnSessionStorage(data, cartID)
-        });
+          saveCartOnSessionStorage(data, cartID);
+      });
     }
   };
 
@@ -87,6 +87,7 @@ export default function Cart({ params }) {
 
     if (cart.name) {
       setCartName(cart.name);
+      setMarket(cart.market);
     };
   };
 
@@ -117,7 +118,7 @@ export default function Cart({ params }) {
   return (
     <section>
       <CartBar
-        getCart={loadCartItems}
+        getCart={getItemsFromBackEnd}
         showModalAddItem={setShowModalAddItem}
         showModalNewItem={setShowModalNewItem}
       />

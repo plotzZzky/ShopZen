@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from django.core.exceptions import ObjectDoesNotExist
 
 from .serializer import CartSerializer, CartItemCreateSerializer, CartItemReturnSerializer
+from items.serializer import PantrySerializer
 from .models import Cart, CartItem
 from system.utils import check_profanity
 from items.models import Pantry, PantryItem
@@ -65,17 +66,17 @@ class CartView(ModelViewSet):
             owner: str = request.owner
 
             cart = Cart.objects.get(pk=cart_id)
-            try:
-                pantry = Pantry.objects.get(owner=owner)
-            except ObjectDoesNotExist:
-                pantry = Pantry.objects.create(owner=owner)
+            pantry, created = Pantry.objects.get_or_create(owner=owner)
 
             for item in cart.items.all():
                 for _ in range(item.amount):
                     pantry_item = PantryItem.objects.create(item=item.item, pantry=pantry, date=None)
                     pantry.items.add(pantry_item)
                 item.delete()
-            return Response("Compras feitas!", status=status.HTTP_200_OK)
+
+            pantry = Pantry.objects.get(owner=owner)
+            serializer = PantrySerializer(pantry.items.all(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         except (KeyError, ValueError, ObjectDoesNotExist):
             return Response("Não foi possivel fazer as compras", status=status.HTTP_400_BAD_REQUEST)
@@ -112,7 +113,8 @@ class CartItemView(ModelViewSet):
             query = CartItem.objects.filter(cart=cart)
 
             serializer = CartItemReturnSerializer(query, many=True)
-            return Response({"items": serializer.data, "name": cart.name}, status=status.HTTP_200_OK)
+            result = {"items": serializer.data, "name": cart.name, "market": cart.market}
+            return Response(result, status=status.HTTP_200_OK)
 
         except KeyError:
             return Response(status.HTTP_400_BAD_REQUEST)
